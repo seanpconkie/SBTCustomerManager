@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using SBTCustomerManager.Models;
 using SBTCustomerManager.Models.AccountViewModels;
 using SBTCustomerManager.Services;
+using SBTCustomerManager.Data;
 
 namespace SBTCustomerManager.Controllers
 {
@@ -24,17 +25,21 @@ namespace SBTCustomerManager.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private ApplicationDbContext _context;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            ApplicationDbContext context
+            )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
+            _context = context;
         }
 
         [TempData]
@@ -222,6 +227,7 @@ namespace SBTCustomerManager.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
+                
                 var user = new ApplicationUser 
                 { 
                     UserName = model.Username, 
@@ -238,6 +244,42 @@ namespace SBTCustomerManager.Controllers
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation("User created a new account with password.");
+
+                    // create additional user info
+                    var contact = new UserContact();
+                    var company = new CompanyDetail();
+                    var newUser = new UserDetail();
+                    var createdUser = await _userManager.GetUserAsync(User);
+
+                    contact.BuildingNumber = model.BuildingNumber;
+                    contact.AddressLine1 = model.AddressLine1;
+                    contact.AddressLine2 = model.AddressLine2;
+                    contact.PostTown = model.PostTown;
+                    contact.County = model.County;
+                    contact.Country = model.Country;
+                    contact.Postcode = model.Postcode;
+                    contact.UserId = createdUser.Id;
+
+                    _context.Add(contact);
+                    _context.SaveChanges();
+
+                    company.Name = model.CompanyName;
+                    company.StartDate = DateTime.Now;
+                    company.UserId = createdUser.Id;
+
+                    _context.Add(company);
+                    _context.SaveChanges();
+
+                    newUser.ForeName = model.ForeName;
+                    newUser.Surname = model.Surname;
+                    newUser.Name = model.ForeName + ' ' + model.Surname;
+                    newUser.Title = model.Title;
+                    newUser.StartDate = DateTime.Now;
+                    newUser.UserContactId = contact.Id;
+
+                    _context.Add(newUser);
+                    _context.SaveChanges();
+
                     return RedirectToLocal(returnUrl);
                 }
                 AddErrors(result);
