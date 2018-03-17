@@ -11,9 +11,10 @@ using System;
 namespace SBTCustomerManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180317163354_AddCompanyUserDataModel")]
+    partial class AddCompanyUserDataModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -254,13 +255,15 @@ namespace SBTCustomerManager.Data.Migrations
                     b.Property<string>("Title")
                         .IsRequired();
 
-                    b.Property<int>("UserContactId");
+                    b.Property<byte>("UserContactId");
+
+                    b.Property<int?>("UserContactId1");
 
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserContactId");
+                    b.HasIndex("UserContactId1");
 
                     b.ToTable("UserDetails");
                 });
@@ -314,8 +317,7 @@ namespace SBTCustomerManager.Data.Migrations
                 {
                     b.HasOne("SBTCustomerManager.Models.UserContact", "UserContact")
                         .WithMany()
-                        .HasForeignKey("UserContactId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserContactId1");
                 });
 #pragma warning restore 612, 618
         }

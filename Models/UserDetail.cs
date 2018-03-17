@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SBTCustomerManager.Models
 {
-    public class UserDetails
+    public class UserDetail
     {
 
         [StringLength(255)]
@@ -20,6 +20,7 @@ namespace SBTCustomerManager.Models
 
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+
         public int Id { get; set; }
         public string UserId { get; set; }
 
@@ -27,7 +28,7 @@ namespace SBTCustomerManager.Models
         public UserContact UserContact { get; set; }
 
         [Display(Name = "Contact Details")]
-        public byte UserContactId { get; set; }
+        public int UserContactId { get; set; }
 
     }
 }

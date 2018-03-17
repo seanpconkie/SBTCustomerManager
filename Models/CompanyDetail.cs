@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SBTCustomerManager.Models
 {
-    public class CompanyDetails
+    public class CompanyDetail
     {
         public int Id { get; set; }
 
