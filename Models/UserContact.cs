@@ -21,6 +21,8 @@ namespace SBTCustomerManager.Models
         public string Email { get; set; }
 
         // Address
+        [Display(Name = "Building Number")]
+        public string BuildingNumber { get; set; }
         [Display(Name = "Address Line 1")]
         public string AddressLine1 { get; set; }
         [Display(Name = "Address Line 2")]

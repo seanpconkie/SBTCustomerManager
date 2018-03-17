@@ -209,6 +209,8 @@ namespace SBTCustomerManager.Controllers
         public IActionResult Register(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+            //var viewModel = new RegisterViewModel();
+
             return View();
         }
 
