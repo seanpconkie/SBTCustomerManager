@@ -7,20 +7,22 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-            </li>
-            <li>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link">Log out</button>
-            </li>
-        </ul>
+        <div class="w3-dropdown-hover w3-hide-small w3-right">
+            <button class="w3-padding-large w3-white w3-text-grey button-large">
+                <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">
+                    <i class="fa fa-user w3-margin-right"></i>@UserManager.GetUserName(User)<i class="fa fa-caret-down w3-margin-left"></i>
+                </a> 
+            </button>
+            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage" class="w3-bar-item w3-hide-small w3-button">Your Account</a>
+                <button type="submit" class="w3-bar-item w3-hide-small w3-button">Log out</button>
+            </div>
+        </div>
     </form>
 }
 else
 {
-    <ul class="nav navbar-nav navbar-right">
-        <li><a asp-area="" asp-controller="Account" asp-action="Register">Register</a></li>
-        <li><a asp-area="" asp-controller="Account" asp-action="Login">Log in</a></li>
-    </ul>
+    <a asp-area="" asp-controller="Account" asp-action="Login" class="w3-bar-item w3-hide-small w3-button w3-right">
+        <button class="w3-bar-item w3-hide-small w3-button"><i class="fa fa-user w3-margin-right"></i>Log in</button>
+    </a>    
 }
