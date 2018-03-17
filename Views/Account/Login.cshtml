@@ -8,59 +8,59 @@
 @{
     ViewData["Title"] = "Log in";
 }
+<body style="background: url(@Model.HomeBackground.ImageURL) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;">
+    <h2>@ViewData["Title"]</h2>
 
-<h2>@ViewData["Title"]</h2>
+    <div class="w3-content w3-container">
 
-<div class="w3-content w3-container">
-
-    <div class="w3-row">
-        <div class="w3-container w3-half">
-            <h2>Log In</h2>
-            <hr />
-            <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
-                <div asp-validation-summary="All" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="Email"></label>
-                    <input asp-for="Email" class="w3-input" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Password"></label>
-                    <input asp-for="Password" class="w3-input" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <div class="checkbox">
-                        <label asp-for="RememberMe">
-                            <input asp-for="RememberMe" />
-                            @Html.DisplayNameFor(m => m.RememberMe)
-                        </label>
+        <div class="w3-row">
+            <div class="w3-container w3-half w3-opacity w3-hover-opacity-off w3-white">
+                <h2>Log In</h2>
+                <hr />
+                <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" class="w3-input" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
+                    <div class="form-group">
+                        <label asp-for="Password"></label>
+                        <input asp-for="Password" class="w3-input" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label asp-for="RememberMe">
+                                <input asp-for="RememberMe" />
+                                @Html.DisplayNameFor(m => m.RememberMe)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="accordian1 w3-text-white w3-padding w3-block w3-button w3-round">Log in</button>
+                    </div>
+                    <div class="form-group">
+                        <p>
+                            <a asp-action="ForgotPassword" class="w3-opacity-off">Forgot your password?</a>
+                        </p>
+                        <p>
+                            <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Register as a new user?</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+            <div class="w3-half">
+                <div class="w3-container">
+                    
                 </div>
-                <div class="form-group">
-                    <button type="submit" class="accordian1 w3-text-white w3-padding w3-block w3-button w3-round">Log in</button>
-                </div>
-                <div class="form-group">
-                    <p>
-                        <a asp-action="ForgotPassword">Forgot your password?</a>
-                    </p>
-                    <p>
-                        <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Register as a new user?</a>
-                    </p>
-                </div>
-            </form>
-        </div>
-        <div class="w3-half w3-card w3-light-grey" style="min-height: 410px">
-            <div class="w3-container">
-                <h4> <i class="fas fa-info-circle"></i> Information</h4>
-                <p>@ViewData["Message"]</p>
             </div>
         </div>
-    </div>
 
-    <div class="w3-row"><p><br></p></div>
-    
-</div>
+        <div class="w3-row"><p><br></p></div>
+        
+    </div>
+</body>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

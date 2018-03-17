@@ -53,7 +53,13 @@ namespace SBTCustomerManager.Controllers
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ViewData["ReturnUrl"] = returnUrl;
-            return View();
+
+            var viewModel = new LoginViewModel();
+
+            viewModel.HomeBackground = new HomeBackground();
+
+            return View(viewModel);
+
         }
 
         [HttpPost]
@@ -249,7 +255,6 @@ namespace SBTCustomerManager.Controllers
                     var contact = new UserContact();
                     var company = new CompanyDetail();
                     var newUser = new UserDetail();
-                    var createdUser = await _userManager.GetUserAsync(User);
 
                     contact.BuildingNumber = model.BuildingNumber;
                     contact.AddressLine1 = model.AddressLine1;
@@ -258,17 +263,19 @@ namespace SBTCustomerManager.Controllers
                     contact.County = model.County;
                     contact.Country = model.Country;
                     contact.Postcode = model.Postcode;
-                    contact.UserId = createdUser.Id;
+                    contact.UserId = user.Id;
 
                     _context.Add(contact);
                     _context.SaveChanges();
 
                     company.Name = model.CompanyName;
                     company.StartDate = DateTime.Now;
-                    company.UserId = createdUser.Id;
-
-                    _context.Add(company);
-                    _context.SaveChanges();
+                    company.UserId = user.Id;
+                    if (company.Name != null)
+                    {
+                        _context.Add(company);
+                        _context.SaveChanges();
+                    }
 
                     newUser.ForeName = model.ForeName;
                     newUser.Surname = model.Surname;
@@ -276,6 +283,7 @@ namespace SBTCustomerManager.Controllers
                     newUser.Title = model.Title;
                     newUser.StartDate = DateTime.Now;
                     newUser.UserContactId = contact.Id;
+                    newUser.UserId = user.Id;
 
                     _context.Add(newUser);
                     _context.SaveChanges();
@@ -503,7 +511,7 @@ namespace SBTCustomerManager.Controllers
             }
             else
             {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                return RedirectToAction(nameof(AccountController.Login), "Account");
             }
         }
 

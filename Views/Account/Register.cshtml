@@ -117,12 +117,12 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="PostTown"></label>
-                    <input asp-for="PostTown" class="w3-input" id="locality"/>
+                    <input asp-for="PostTown" class="w3-input" id="postal_town"/>
                     <span asp-validation-for="PostTown" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="County"></label>
-                    <input asp-for="County" class="w3-input" id="administrative_area_level_1"/>
+                    <input asp-for="County" class="w3-input" id="locality"/>
                     <span asp-validation-for="County" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -159,8 +159,8 @@
       var componentForm = {
         street_number: 'short_name',
         route: 'long_name',
+        postal_town: 'long_name',
         locality: 'long_name',
-        administrative_area_level_1: 'short_name',
         country: 'long_name',
         postal_code: 'short_name'
       };

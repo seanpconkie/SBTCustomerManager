@@ -18,5 +18,7 @@ namespace SBTCustomerManager.Models.AccountViewModels
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
+
+        public HomeBackground HomeBackground { get; set; }
     }
 }
