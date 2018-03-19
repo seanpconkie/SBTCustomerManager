@@ -45,7 +45,6 @@ namespace SBTCustomerManager.Models.AccountViewModels
 
         [Required]
         public string Title { get; set; }
-        public IEnumerable<SelectListItem> Titles { get; set; }
 
         // App user contact
         [Phone]
@@ -74,27 +73,6 @@ namespace SBTCustomerManager.Models.AccountViewModels
         [StringLength(100)]
         [Display(Name = "Company name")]
         public string CompanyName { get; set; }
-        #endregion
-
-        #region Constructors
-        public RegisterViewModel()
-        {
-            //Titles = this.GetTitles();
-        }
-        #endregion
-        #region Private Methods
-        private IEnumerable<SelectListItem> GetTitles()
-        {
-            return new SelectListItem[]
-            {
-            new SelectListItem() { Text = "Dr", Value = "Dr" },
-            new SelectListItem() { Text = "Miss", Value = "Miss" },
-            new SelectListItem() { Text = "Mr", Value = "Mr" },
-            new SelectListItem() { Text = "Mrs", Value = "Mrs" },
-            new SelectListItem() { Text = "Ms", Value = "Ms" },
-            new SelectListItem() { Text = "Other", Value = string.Empty }
-            };
-        }
         #endregion
 
 

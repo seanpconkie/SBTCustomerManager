@@ -1,0 +1,14 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using SBTCustomerManager.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage" class="w3-container w3-padding w3-button w3-block w3-border-bottom">View Account Details</a>
+}
+else
+{
+     
+}

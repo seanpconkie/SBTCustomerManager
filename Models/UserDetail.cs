@@ -30,5 +30,9 @@ namespace SBTCustomerManager.Models
         [Display(Name = "Contact Details")]
         public int UserContactId { get; set; }
 
+        public CompanyDetail Company { get; set; }
+
+        [Display(Name = "Company Details")]
+        public int CompanyId { get; set; }
     }
 }

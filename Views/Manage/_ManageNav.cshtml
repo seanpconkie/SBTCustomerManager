@@ -4,13 +4,14 @@
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
 
-<ul class="w3-bar">
-    <li class="@ManageNavPages.IndexNavClass(ViewContext)"><a asp-action="Index">Profile</a></li>
-    <li class="@ManageNavPages.ChangePasswordNavClass(ViewContext)"><a asp-action="ChangePassword">Password</a></li>
+<div class="w3-bar">
+    <div class="@ManageNavPages.IndexNavClass(ViewContext) w3-bar-item w3-button"><a asp-action="Index">Profile</a></div>
+    <div class="@ManageNavPages.IndexNavClass(ViewContext) w3-bar-item w3-button"><a asp-action="Contact">Contact Info</a></div>
+    <div class="@ManageNavPages.ChangePasswordNavClass(ViewContext) w3-bar-item w3-button"><a asp-action="ChangePassword">Password</a></div>
     @if (hasExternalLogins)
     {
-        <li class="@ManageNavPages.ExternalLoginsNavClass(ViewContext)"><a asp-action="ExternalLogins">External logins</a></li>
+        <div class="@ManageNavPages.ExternalLoginsNavClass(ViewContext) w3-bar-item w3-button"><a asp-action="ExternalLogins">External logins</a></div>
     }
-    <li class="@ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)"><a asp-action="TwoFactorAuthentication">Two-factor authentication</a></li>
-</ul>
+<!--    <div class="@ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext) w3-bar-item w3-button"><a asp-action="TwoFactorAuthentication">Two-factor authentication</a></div>-->
+</div>
 

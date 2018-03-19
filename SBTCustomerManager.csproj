@@ -18,4 +18,9 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Views\User\_UserNav.cshtml" />
+    <None Remove="Views\User\_Layout.html" />
+    <None Remove="Views\User\_StatusMessage.cshtml" />
+  </ItemGroup>
 </Project>

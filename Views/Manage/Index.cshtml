@@ -6,67 +6,86 @@
 
 @Html.Partial("_StatusMessage", Model.StatusMessage)
 
-<div class="w3-content w3-container">
 
-    <div class="w3-row">
-        <h2>@ViewData["Title"]</h2>
-        <hr/>
-        <div asp-validation-summary="All" class="text-danger"></div>
-        
+    <div class="w3-row-padding w3-margin-top">
+
         <form method="post">
-            <div class="w3-container w3-half">
+            <div class="w3-bar">
+                <div asp-validation-summary="All" class="text-danger w3-bar-item"></div>
+                <button type="submit" class="w3-button w3-bar-item w3-right accordian1 w3-text-white"><i class="fas fa-save"></i></button>
+                <button type="reset" class="w3-button w3-bar-item w3-right accordian2 w3-text-white"><i class="fas fa-redo"></i></button>
+            </div>
+
+            <div class="w3-half">
+                <div class="w3-container">
+                    <label asp-for="UserDetail.Company.Name" ></label>
+                    <input asp-for="UserDetail.Company.Name" class=" w3-input" disabled=""/>
                 
-                <div class="form-group">
-                    <label asp-for="Username"></label>
-                    <input asp-for="Username" class="w3-input" disabled="disabled" />
-                </div>
+                    <label asp-for="UserDetail.Name" ></label>
+                    <input asp-for="UserDetail.Name" class=" w3-input" disabled=""/>
 
-                <div class="form-group">
-                    <label asp-for="Email"></label>
+                    <label asp-for="Username" ></label>
+                    <input asp-for="Username" class=" w3-input" disabled=""/>
 
+                    <label class=""><i class="fas fa-at"></i> Account e-mail <i class="fa fa-info-circle" data-toggle="popover" data-trigger="focus" data-content="Change your e-mail address under 'Contact Info'"></i> </label>
                     @if (Model.IsEmailConfirmed)
                     {
                         <div class="input-group">
-                            <input asp-for="Email" class="w3-input" />
+                            <input asp-for="Email" class="w3-input"  disabled=""/>
                             <span class="input-group-addon" aria-hidden="true"><span class="glyphicon glyphicon-ok text-success"></span></span>
                         </div>
                     }
                     else
                     {
-                        <input asp-for="Email" class="w3-input" />
+                        <input asp-for="Email" class="w3-input"  disabled=""/>
                         <br>
                         <button asp-action="SendVerificationEmail" class="accordian1 w3-text-white w3-padding w3-block w3-button w3-round">Send verification email</button>
                         <br>
                     }
-                    
-                    <span asp-validation-for="Email" class="text-danger"></span>
+
                 </div>
-
-                <div class="form-group">
-                    <label asp-for="PhoneNumber"></label>
-                    <input asp-for="PhoneNumber" class="w3-input" />
-                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                </div>
-                
-            </div>  
-
-            <div class="w3-container w3-half" >
-
-                
-                
-            </div>  
-
-            <div class="w3-row"><p><br></p></div>
-
-            <button type="submit" class="accordian1 w3-text-white w3-padding w3-block w3-button w3-round">Save Changes</button>
             
+            </div>
+            <div class="w3-half">
+                <div class="w3-container">
+                    <div class="form-group">
+                        <label asp-for="UserDetail.Title"></label>
+                        @Html.DropDownListFor(m => m.UserDetail.Title, 
+                        new List<SelectListItem>
+                        {
+                            new SelectListItem() { Text = "Dr", Value = "Dr" },
+                            new SelectListItem() { Text = "Miss", Value = "Miss" },
+                            new SelectListItem() { Text = "Mr", Value = "Mr" },
+                            new SelectListItem() { Text = "Mrs", Value = "Mrs" },
+                            new SelectListItem() { Text = "Ms", Value = "Ms" },
+                            new SelectListItem() { Text = "Other", Value = string.Empty }
+                        }
+
+                        ,"Select Title", new {@class = "w3-input", required=""})
+                        <span asp-validation-for="UserDetail.Title" class="text-danger"></span>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label asp-for="UserDetail.ForeName"></label>
+                        <input asp-for="UserDetail.ForeName" class="w3-input" />
+                        <span asp-validation-for="UserDetail.ForeName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="UserDetail.Surname"></label>
+                        <input asp-for="UserDetail.Surname" class="w3-input" />
+                        <span asp-validation-for="UserDetail.Surname" class="text-danger"></span>
+                    </div>                
+                </div>
+            </div>
         </form>
         
     </div>
     <div class="w3-row"><p><br></p></div>
     
-</div>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        $("[data-toggle='popover']").popover({ trigger: "hover" });
+    </script>
 }

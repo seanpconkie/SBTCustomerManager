@@ -1,19 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using SBTCustomerManager.Data;
 using SBTCustomerManager.Models;
 using SBTCustomerManager.Models.AccountViewModels;
 using SBTCustomerManager.Services;
-using SBTCustomerManager.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace SBTCustomerManager.Controllers
 {
@@ -25,7 +23,7 @@ namespace SBTCustomerManager.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -44,6 +42,7 @@ namespace SBTCustomerManager.Controllers
 
         [TempData]
         public string ErrorMessage { get; set; }
+
 
         [HttpGet]
         [AllowAnonymous]
@@ -72,11 +71,11 @@ namespace SBTCustomerManager.Controllers
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction(nameof(ManageController.Index), "Manage");
                 }
                 if (result.RequiresTwoFactor)
                 {
@@ -220,7 +219,6 @@ namespace SBTCustomerManager.Controllers
         public IActionResult Register(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            //var viewModel = new RegisterViewModel();
 
             return View();
         }
@@ -263,6 +261,10 @@ namespace SBTCustomerManager.Controllers
                     contact.County = model.County;
                     contact.Country = model.Country;
                     contact.Postcode = model.Postcode;
+                    contact.MobilePhone = model.MobilePhone;
+                    contact.WorkPhone = model.WorkPhone;
+                    contact.OtherPhone = model.OtherPhone;
+                    contact.Email = model.Email;
                     contact.UserId = user.Id;
 
                     _context.Add(contact);
@@ -288,7 +290,7 @@ namespace SBTCustomerManager.Controllers
                     _context.Add(newUser);
                     _context.SaveChanges();
 
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction(nameof(ManageController.Index), "Manage");
                 }
                 AddErrors(result);
             }
