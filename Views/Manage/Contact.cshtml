@@ -87,6 +87,10 @@
                 </div>
             </div>
         </div>
+        @Html.HiddenFor(m => m.UserDetail.ForeName)
+        @Html.HiddenFor(m => m.UserDetail.Surname)
+        @Html.HiddenFor(m => m.UserDetail.Title)
+        @Html.AntiForgeryToken()
         
     </form>
 

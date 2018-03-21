@@ -1,21 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using SBTCustomerManager.Data;
 using SBTCustomerManager.Models;
 using SBTCustomerManager.Models.ManageViewModels;
 using SBTCustomerManager.Services;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace SBTCustomerManager.Controllers
 {
@@ -68,10 +66,11 @@ namespace SBTCustomerManager.Controllers
                 PhoneNumber = user.PhoneNumber,
                 IsEmailConfirmed = user.EmailConfirmed,
                 StatusMessage = StatusMessage,
-                UserDetail = _context.UserDetails.Include(c => c.UserContact).SingleOrDefault(c => c.UserId == user.Id)
+                UserDetail = _context.UserDetails.Include(c => c.UserContact).Include(u => u.Company).SingleOrDefault(c => c.UserId == user.Id)
             };
 
             return View(model);
+
         }
 
         [HttpPost]
@@ -133,6 +132,80 @@ namespace SBTCustomerManager.Controllers
             };
 
             return View(model);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Contact(IndexViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            UserContact userContact = _context.UserContacts.SingleOrDefault(c => c.UserId == user.Id);
+
+            var email = user.Email;
+            if (model.Email != email)
+            {
+                var setEmailResult = await _userManager.SetEmailAsync(user, model.Email);
+                if (!setEmailResult.Succeeded)
+                {
+                    throw new ApplicationException($"Unexpected error occurred setting email for user with ID '{user.Id}'.");
+                }
+                userContact.Email = model.Email;
+            }
+
+            var phoneNumber = user.PhoneNumber;
+            string setPhoneNumber = null;
+            if (!string.IsNullOrWhiteSpace(model.UserDetail.UserContact.MobilePhone))
+            {
+                setPhoneNumber = model.UserDetail.UserContact.MobilePhone;
+            }
+            else if (!string.IsNullOrWhiteSpace(model.UserDetail.UserContact.WorkPhone))
+            {
+                setPhoneNumber = model.UserDetail.UserContact.WorkPhone;
+            }
+            else if (!string.IsNullOrWhiteSpace(model.UserDetail.UserContact.OtherPhone))
+            {
+                setPhoneNumber = model.UserDetail.UserContact.OtherPhone;
+            }
+            else
+            {
+                setPhoneNumber = model.PhoneNumber;
+            }
+
+            if (setPhoneNumber != phoneNumber)
+            {
+                
+                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, setPhoneNumber);
+                if (!setPhoneResult.Succeeded)
+                {
+                    throw new ApplicationException($"Unexpected error occurred setting phone number for user with ID '{user.Id}'.");
+                }
+                userContact.MobilePhone = model.UserDetail.UserContact.MobilePhone;
+                userContact.WorkPhone = model.UserDetail.UserContact.WorkPhone;
+                userContact.OtherPhone = model.UserDetail.UserContact.OtherPhone;
+
+            }
+
+            userContact.AddressLine1 = model.UserDetail.UserContact.AddressLine1;
+            userContact.AddressLine2 = model.UserDetail.UserContact.AddressLine2;
+            userContact.BuildingNumber = model.UserDetail.UserContact.BuildingNumber;
+            userContact.County = model.UserDetail.UserContact.County;
+            userContact.Country = model.UserDetail.UserContact.Country;
+            userContact.Postcode = model.UserDetail.UserContact.Postcode;
+            userContact.PostTown = model.UserDetail.UserContact.PostTown;
+
+            StatusMessage = "Your profile has been updated";
+            return RedirectToAction(nameof(Index));
         }
 
 
@@ -519,6 +592,23 @@ namespace SBTCustomerManager.Controllers
             var model = new ShowRecoveryCodesViewModel { RecoveryCodes = recoveryCodes.ToArray() };
 
             return View(nameof(ShowRecoveryCodes), model);
+        }
+
+
+        public IActionResult Messages()
+        {
+
+            return View();
+
+        }
+
+        [HttpGet]
+        public async Task<IEnumerable<UserMessage>> GetMessages()
+        {
+
+            var user = await _userManager.GetUserAsync(User);
+            return _context.UserMessages.Where(c => c.UserId == user.Id).ToList();
+
         }
 
         #region Helpers

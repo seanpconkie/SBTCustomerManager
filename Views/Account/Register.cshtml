@@ -88,12 +88,9 @@
                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="CompanyName"></label>
+                    <label asp-for="CompanyName"></label> <i class="fa fa-info-circle" data-toggle="popover" data-trigger="focus" data-content="This will create a new company.  To add an account to an existing company, the Company Admin user should add the account after registration."></i>
                     <input asp-for="CompanyName" class="w3-input" />
                     <span asp-validation-for="CompanyName" class="text-danger"></span>
-                </div>
-                <div class="w3-margin-top w3-card w3-light-grey w3-padding">
-                    <i class="fa fa-info-circle"></i> This will create a new company.  To add an account to an existing company, the Company Admin user should add the account after registration.
                 </div>
                 <h4>Address details</h4>
                 <hr />
@@ -207,6 +204,9 @@
           });
         }
       }
+    </script>
+    <script>
+        $("[data-toggle='popover']").popover({ trigger: "hover" });
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOfCiFMuWl_6DzM4BsVFPYZ7ZvWmHcKR0&libraries=places&callback=initAutocomplete" async="" defer="defer"></script>
 

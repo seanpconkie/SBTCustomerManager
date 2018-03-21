@@ -6,9 +6,10 @@ namespace SBTCustomerManager.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public DbSet<UserDetail> UserDetails { get; set; }
-        public DbSet<UserContact> UserContacts { get; set; }
         public DbSet<CompanyDetail> CompanyDetails { get; set; }
+        public DbSet<UserContact> UserContacts { get; set; }
+        public DbSet<UserMessage> UserMessages { get; set; }
+        public DbSet<UserDetail> UserDetails { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

@@ -253,6 +253,7 @@ namespace SBTCustomerManager.Controllers
                     var contact = new UserContact();
                     var company = new CompanyDetail();
                     var newUser = new UserDetail();
+                    long companyId = 0;
 
                     contact.BuildingNumber = model.BuildingNumber;
                     contact.AddressLine1 = model.AddressLine1;
@@ -277,6 +278,8 @@ namespace SBTCustomerManager.Controllers
                     {
                         _context.Add(company);
                         _context.SaveChanges();
+
+                        companyId = company.Id;
                     }
 
                     newUser.ForeName = model.ForeName;
@@ -285,6 +288,7 @@ namespace SBTCustomerManager.Controllers
                     newUser.Title = model.Title;
                     newUser.StartDate = DateTime.Now;
                     newUser.UserContactId = contact.Id;
+                    newUser.CompanyId = companyId;
                     newUser.UserId = user.Id;
 
                     _context.Add(newUser);

@@ -21,18 +21,19 @@ namespace SBTCustomerManager.Models
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string UserId { get; set; }
 
 
         public UserContact UserContact { get; set; }
 
         [Display(Name = "Contact Details")]
-        public int UserContactId { get; set; }
+        public long UserContactId { get; set; }
 
         public CompanyDetail Company { get; set; }
 
         [Display(Name = "Company Details")]
-        public int CompanyId { get; set; }
+        public long CompanyId { get; set; }
+
     }
 }

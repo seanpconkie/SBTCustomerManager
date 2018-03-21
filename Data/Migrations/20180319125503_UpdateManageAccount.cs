@@ -42,5 +42,6 @@ namespace SBTCustomerManager.Data.Migrations
                 name: "CompanyId",
                 table: "UserDetails");
         }
+
     }
 }

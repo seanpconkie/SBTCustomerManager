@@ -5,10 +5,11 @@ namespace SBTCustomerManager.Models
 {
     public class CompanyDetail
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [Required]
         [StringLength(255)]
+        [Display(Name = "Company Name")]
         public string Name { get; set; }
 
         public DateTime? StartDate { get; set; }
