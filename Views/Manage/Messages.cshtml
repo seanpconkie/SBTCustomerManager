@@ -1,0 +1,52 @@
+﻿@model SBTCustomerManager.Models.UserDataModels.MessageViewModel
+@{
+    ViewData["Title"] = "Messages";
+    ViewData.AddActivePage(ManageNavPages.Index);
+}
+
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+<div class="w3-container">
+    <table id="messages" class="display">
+        <thead>
+            <tr>
+                <th style="width: 20px"></th>
+                <th style="width: 200px">Date</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var message in Model.UserMessages)
+            {
+                <tr>
+                    <td class="w3-center">
+                    @if (message.IsMessageRead)
+                    {
+                        <i class="far fa-envelope-open"></i>
+                    }
+                    else
+                    {
+                        <i class="far fa-envelope"></i>
+                    }
+                    </td>
+                    <td class="w3-center">@message.MessageDate</td>
+                    <td><a href="javascript:void(0);" data-message-id="@message.Id">@message.Title</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>    
+</div>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#messages").DataTable();
+    
+        });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>  
+}

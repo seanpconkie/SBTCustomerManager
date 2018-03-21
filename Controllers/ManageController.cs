@@ -595,20 +595,13 @@ namespace SBTCustomerManager.Controllers
             return View(nameof(ShowRecoveryCodes), model);
         }
 
-
-        public IActionResult Messages()
-        {
-
-            return View();
-
-        }
-
-        [HttpGet]
-        public async Task<IEnumerable<UserMessage>> GetMessages()
+        public async Task<IActionResult> Messages()
         {
 
             var user = await _userManager.GetUserAsync(User);
-            return _context.UserMessages.Where(c => c.UserId == user.Id).ToList();
+            var viewModel = new MessageViewModel { UserMessages = _context.UserMessages.Where(c => c.UserId == user.Id) };
+
+            return View(viewModel);
 
         }
 
