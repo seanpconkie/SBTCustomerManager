@@ -246,8 +246,7 @@ namespace SBTCustomerManager.Controllers
                     var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
                     await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    _logger.LogInformation("User created a new account with password.");
+                    //await _signInManager.SignInAsync(user, isPersistent: false);
 
                     // create additional user info
                     var contact = new UserContact();
@@ -299,6 +298,7 @@ namespace SBTCustomerManager.Controllers
                     // Add User Role TEMP
 
                     return RedirectToAction(nameof(ManageController.Index), "Manage");
+
                 }
                 AddErrors(result);
             }

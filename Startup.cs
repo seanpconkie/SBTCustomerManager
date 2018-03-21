@@ -67,6 +67,9 @@ namespace SBTCustomerManager
                 options.SlidingExpiration = true;
             });
 
+            // Send Grid
+            services.Configure<AuthMessageSenderOptions>(Configuration);
+
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
