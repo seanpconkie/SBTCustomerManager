@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using SBTCustomerManager.Data;
 using SBTCustomerManager.Models;
 using SBTCustomerManager.Models.AccountViewModels;
+using SBTCustomerManager.Models.UserDataModels;
 using SBTCustomerManager.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;

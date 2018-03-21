@@ -24,4 +24,7 @@
     <None Remove="Views\User\_Layout.html" />
     <None Remove="Views\User\_StatusMessage.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\UserDataModel\" />
+  </ItemGroup>
 </Project>

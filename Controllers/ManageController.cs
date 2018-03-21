@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using SBTCustomerManager.Data;
 using SBTCustomerManager.Models;
 using SBTCustomerManager.Models.ManageViewModels;
+using SBTCustomerManager.Models.UserDataModels;
 using SBTCustomerManager.Services;
 
 namespace SBTCustomerManager.Controllers

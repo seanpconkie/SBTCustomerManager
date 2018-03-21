@@ -1,5 +1,5 @@
 ﻿using System;
-namespace SBTCustomerManager.Models
+namespace SBTCustomerManager.Models.UserDataModels
 {
     public class UserMessage
     {

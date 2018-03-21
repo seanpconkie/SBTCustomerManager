@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace SBTCustomerManager.Models
+namespace SBTCustomerManager.Models.UserDataModels
 {
     public class UserDetail
     {
