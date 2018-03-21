@@ -294,6 +294,10 @@ namespace SBTCustomerManager.Controllers
                     _context.Add(newUser);
                     _context.SaveChanges();
 
+                    // Create welcome message
+
+                    // Add User Role TEMP
+
                     return RedirectToAction(nameof(ManageController.Index), "Manage");
                 }
                 AddErrors(result);
