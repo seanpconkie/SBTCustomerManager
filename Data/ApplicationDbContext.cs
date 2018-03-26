@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SBTCustomerManager.Models.UserDataModels;
+using SBTCustomerManager.Models.CompanyDataModel;
 using SBTCustomerManager.Models;
 
 namespace SBTCustomerManager.Data

@@ -1,18 +1,19 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SBTCustomerManager.Data;
 using SBTCustomerManager.Models;
 using SBTCustomerManager.Models.AccountViewModels;
+using SBTCustomerManager.Models.CompanyDataModel;
 using SBTCustomerManager.Models.UserDataModels;
 using SBTCustomerManager.Services;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace SBTCustomerManager.Controllers
 {

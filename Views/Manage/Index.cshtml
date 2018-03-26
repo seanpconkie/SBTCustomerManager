@@ -12,21 +12,23 @@
         <form method="post">
             <div class="w3-bar">
                 <div asp-validation-summary="All" class="text-danger w3-bar-item"></div>
-                <button type="submit" class="w3-button w3-bar-item w3-right accordian1 w3-text-white"><i class="fas fa-save"></i></button>
-                <button type="reset" class="w3-button w3-bar-item w3-right accordian2 w3-text-white"><i class="fas fa-redo"></i></button>
+                <button type="submit" class="w3-button w3-bar-item w3-right accordian1 w3-text-white" data-toggle="popover" data-trigger="focus" data-content="Save Changes" data-placement="top"><i class="fas fa-save"></i></button>
+                <button type="reset" class="w3-button w3-bar-item w3-right accordian2 w3-text-white" data-toggle="popover" data-trigger="focus" data-content="Reset" data-placement="top"><i class="fas fa-redo"></i></button>
             </div>
 
             <div class="w3-half">
                 <div class="w3-container">
-                    <label asp-for="UserDetail.Company.Name" ></label>
-                    <input asp-for="UserDetail.Company.Name" class=" w3-input" disabled=""/>
-                
-                    <label asp-for="UserDetail.Name" ></label>
-                    <input asp-for="UserDetail.Name" class=" w3-input" disabled=""/>
 
                     <label asp-for="Username" ></label>
                     <input asp-for="Username" class=" w3-input" disabled=""/>
+                
+                    <label asp-for="UserDetail.UserId" ></label>
+                    <input asp-for="UserDetail.UserId" class=" w3-input" disabled=""/>
 
+                
+                    <label asp-for="UserDetail.Company.Name" ></label>
+                    <input asp-for="UserDetail.Company.Name" class=" w3-input" disabled=""/>
+                
                     <label class=""><i class="fas fa-at"></i> Account e-mail <i class="fa fa-info-circle" data-toggle="popover" data-trigger="focus" data-content="Change your e-mail address under 'Contact Info'"></i> </label>
                     @if (Model.IsEmailConfirmed)
                     {
@@ -75,6 +77,9 @@
                         <input asp-for="UserDetail.Surname" class="w3-input" />
                         <span asp-validation-for="UserDetail.Surname" class="text-danger"></span>
                     </div>                
+                
+                    <label asp-for="UserDetail.Name" ></label>
+                    <input asp-for="UserDetail.Name" class=" w3-input" disabled=""/>
                 </div>
             </div>
         </form>

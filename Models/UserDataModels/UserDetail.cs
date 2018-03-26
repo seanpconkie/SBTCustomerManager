@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using SBTCustomerManager.Models.CompanyDataModel;
 
 namespace SBTCustomerManager.Models.UserDataModels
 {

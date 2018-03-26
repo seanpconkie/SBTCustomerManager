@@ -11,8 +11,8 @@
     <form method="post">
         <div class="w3-bar">
             <div asp-validation-summary="All" class="text-danger w3-bar-item"></div>
-            <button type="submit" class="w3-button w3-bar-item w3-right accordian1 w3-text-white"><i class="fas fa-save"></i></button>
-            <button type="reset" class="w3-button w3-bar-item w3-right accordian2 w3-text-white"><i class="fas fa-redo"></i></button>
+            <button type="submit" class="w3-button w3-bar-item w3-right accordian1 w3-text-white" data-toggle="popover" data-trigger="focus" data-content="Save Changes" data-placement="top"><i class="fas fa-save"></i></button>
+            <button type="reset" class="w3-button w3-bar-item w3-right accordian2 w3-text-white" data-toggle="popover" data-trigger="focus" data-content="Reset" data-placement="top"><i class="fas fa-redo"></i></button>
         </div>
         <div asp-validation-summary="All" class="text-danger"></div>
         <div class="w3-half">
@@ -156,6 +156,9 @@
           });
         }
       }
+    </script>
+    <script>
+        $("[data-toggle='popover']").popover({ trigger: "hover" });
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOfCiFMuWl_6DzM4BsVFPYZ7ZvWmHcKR0&libraries=places&callback=initAutocomplete" async="" defer="defer"></script>
 

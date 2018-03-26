@@ -70,6 +70,8 @@ namespace SBTCustomerManager.Controllers
                 UserDetail = _context.UserDetails.Include(c => c.UserContact).Include(u => u.Company).SingleOrDefault(c => c.UserId == user.Id)
             };
 
+
+
             return View(model);
 
         }
@@ -214,10 +216,10 @@ namespace SBTCustomerManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SendVerificationEmail(IndexViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return View(model);
+            //}
 
             var user = await _userManager.GetUserAsync(User);
             if (user == null)

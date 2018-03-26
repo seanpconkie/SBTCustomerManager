@@ -2,7 +2,7 @@
     Layout = "/Views/Shared/_Layout.cshtml";
 }
     <h2>
-        Manage your account
+        Your Company
         <a class="w3-bar-item w3-button w3-hover-black w3-hide-medium w3-hide-large w3-right" href="javascript:void(0);" onclick="toggleFunction()" title="Toggle Navigation Menu">
             <i class="fa fa-bars"></i>
         </a>
@@ -26,7 +26,9 @@
         </div>
         
         <div id="pageContent" class="w3-threequarter">
-            <h2>Your Messages</h2>
+            <div>
+                @await Html.PartialAsync("_CompanyNav")
+            </div>
             <hr />
             <div class="w3-container">
                 @RenderBody()

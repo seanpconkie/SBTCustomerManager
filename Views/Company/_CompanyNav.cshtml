@@ -1,0 +1,11 @@
+﻿@using SBTCustomerManager.Views.Company
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+
+<div class="w3-bar">
+    <div class="@CompanyNavPages.IndexNavClass(ViewContext) w3-bar-item w3-button"><a asp-action="Index">Company Details</a></div>
+    <div class="@CompanyNavPages.UsersNavClass(ViewContext) w3-bar-item w3-button"><a asp-action="Users">Company Users</a></div>
+</div>
+
