@@ -1,6 +1,6 @@
 ﻿@model SBTCustomerManager.Models.CompanyDataModel.CompanyViewModel
 @{
-    ViewData["Title"] = "Messages";
+    ViewData["Title"] = "Company Users";
 }
 
 @Html.Partial("_StatusMessage", Model.StatusMessage)
@@ -8,7 +8,7 @@
 <div class="w3-container">
     <div class="w3-bar w3-padding">
         <div asp-validation-summary="All" class="text-danger w3-bar-item"></div>
-        <a href="" class="w3-bar-item w3-button accordian1 w3-right" data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Add User"><i class="fas fa-user-plus"></i></a>
+        <a asp-controller="Company" asp-action="AddUser" class="w3-bar-item w3-button accordian1 w3-right" data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Add User"><i class="fas fa-user-plus"></i></a>
     </div>
     <table id="users" class="display">
         <thead>

@@ -89,5 +89,124 @@ namespace SBTCustomerManager.Controllers
             return View(viewModel);
 
         }
+
+
+        [HttpGet]
+        public IActionResult AddUser(string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddUser(RegisterViewModel model, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            if (ModelState.IsValid)
+            {
+                var createdBy = await _userManager.GetUserAsync(User);
+                if (createdBy == null)
+                {
+                    throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                }
+
+                var createdByUserDetail = _context.UserDetails.SingleOrDefault(c => c.UserId == createdBy.Id);
+
+                var user = new ApplicationUser
+                {
+                    UserName = model.Username,
+                    Email = model.Email
+                };
+
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("User created a new account with password.");
+
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+
+                    // create additional user info
+                    var contact = new UserContact();
+                    var newUser = new UserDetail();
+                    long companyId = createdByUserDetail.CompanyId;
+
+                    contact.BuildingNumber = model.BuildingNumber;
+                    contact.AddressLine1 = model.AddressLine1;
+                    contact.AddressLine2 = model.AddressLine2;
+                    contact.PostTown = model.PostTown;
+                    contact.County = model.County;
+                    contact.Country = model.Country;
+                    contact.Postcode = model.Postcode;
+                    contact.MobilePhone = model.MobilePhone;
+                    contact.WorkPhone = model.WorkPhone;
+                    contact.OtherPhone = model.OtherPhone;
+                    contact.Email = model.Email;
+                    contact.UserId = user.Id;
+
+                    _context.Add(contact);
+                    _context.SaveChanges();
+
+                    newUser.ForeName = model.ForeName;
+                    newUser.Surname = model.Surname;
+                    newUser.Name = model.ForeName + ' ' + model.Surname;
+                    newUser.Title = model.Title;
+                    newUser.StartDate = DateTime.Now;
+                    newUser.UserContactId = contact.Id;
+                    newUser.CompanyId = companyId;
+                    newUser.UserId = user.Id;
+
+                    _context.Add(newUser);
+                    _context.SaveChanges();
+
+                    // Create welcome message
+                    _context.Add(Messages.WelcomeMessage(user.Id, newUser.Name));
+                    _context.SaveChanges();
+
+                    // Add User Role TEMP
+
+                    // Re-Set user password
+                    var passwordCode = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var passwordCallbackUrl = Url.ResetPasswordCallbackLink(user.Id, passwordCode, Request.Scheme);
+                    await _emailSender.SendPasswordReset(model.Email, passwordCallbackUrl);
+
+                    return RedirectToAction(nameof(CompanyController.Users), "Company");
+
+                }
+                AddErrors(result);
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+
+        #region Helpers
+
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+        }
+
+        private IActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                return RedirectToAction(nameof(AccountController.Login), "Account");
+            }
+        }
+
+        #endregion
+
     }
 }

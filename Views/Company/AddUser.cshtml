@@ -1,0 +1,206 @@
+﻿@model SBTCustomerManager.Models.AccountViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Add User";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="w3-content w3-container">
+
+    <div class="w3-row">
+        <div asp-validation-summary="All" class="text-danger"></div>
+            
+        <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+
+            <div class="w3-container w3-half">
+            
+                <h4>User details</h4>
+                <hr />
+                <div class="form-group">
+                    <label asp-for="Title"></label>
+                    @Html.DropDownListFor(m => m.Title, 
+                    new List<SelectListItem>
+                    {
+                        new SelectListItem() { Text = "Dr", Value = "Dr" },
+                        new SelectListItem() { Text = "Miss", Value = "Miss" },
+                        new SelectListItem() { Text = "Mr", Value = "Mr" },
+                        new SelectListItem() { Text = "Mrs", Value = "Mrs" },
+                        new SelectListItem() { Text = "Ms", Value = "Ms" },
+                        new SelectListItem() { Text = "Other", Value = string.Empty }
+                    }
+
+                    ,"Select Title", new {@class = "w3-input", required=""})
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label asp-for="ForeName"></label>
+                    <input asp-for="ForeName" class="w3-input" />
+                    <span asp-validation-for="ForeName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Surname"></label>
+                    <input asp-for="Surname" class="w3-input" />
+                    <span asp-validation-for="Surname" class="text-danger"></span>
+                </div>
+                <h4>Contact details</h4>
+                <hr />
+                <div class="form-group">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" class="w3-input" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MobilePhone"></label>
+                    <input asp-for="MobilePhone" class="w3-input" />
+                    <span asp-validation-for="MobilePhone" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="WorkPhone"></label>
+                    <input asp-for="WorkPhone" class="w3-input" />
+                    <span asp-validation-for="WorkPhone" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="OtherPhone"></label>
+                    <input asp-for="OtherPhone" class="w3-input" />
+                    <span asp-validation-for="OtherPhone" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="w3-container w3-half">
+                <h4>Account details</h4>
+                <hr />
+
+                <div class="form-group">
+                    <label asp-for="Username"></label>
+                    <input asp-for="Username" class="w3-input" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" class="w3-input" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword"></label>
+                    <input asp-for="ConfirmPassword" class="w3-input" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <h4>Address details</h4>
+                <hr />
+                <div id="locationField">
+                    <input id="autocomplete" placeholder="Enter your address"onFocus="geolocate()" type="text" class="w3-input"/>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BuildingNumber"></label>
+                    <input asp-for="BuildingNumber" class="w3-input" id="street_number"/>
+                    <span asp-validation-for="BuildingNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AddressLine1"></label>
+                    <input asp-for="AddressLine1" class="w3-input" id="route"/>
+                    <span asp-validation-for="AddressLine1" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AddressLine2"></label>
+                    <input asp-for="AddressLine2" class="w3-input" />
+                    <span asp-validation-for="AddressLine2" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PostTown"></label>
+                    <input asp-for="PostTown" class="w3-input" id="postal_town"/>
+                    <span asp-validation-for="PostTown" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="County"></label>
+                    <input asp-for="County" class="w3-input" id="locality"/>
+                    <span asp-validation-for="County" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Country"></label>
+                    <input asp-for="Country" class="w3-input" id="country"/>
+                    <span asp-validation-for="Country" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Postcode"></label>
+                    <input asp-for="Postcode" class="w3-input" id="postal_code"/>
+                    <span asp-validation-for="Postcode" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="w3-row">
+                <p>
+                    <button type="submit" class="accordian1 w3-text-white w3-padding w3-block w3-button w3-round">Create</button>
+                </p>
+            </div>
+        </form>
+
+    </div>
+
+    <div class="w3-row"><p><br></p></div>
+    
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+
+    <script>
+
+      var placeSearch, autocomplete;
+      var componentForm = {
+        street_number: 'short_name',
+        route: 'long_name',
+        postal_town: 'long_name',
+        locality: 'long_name',
+        country: 'long_name',
+        postal_code: 'short_name'
+      };
+
+      function initAutocomplete() {
+       
+        autocomplete = new google.maps.places.Autocomplete(
+            (document.getElementById('autocomplete')),
+            {types: ['geocode']});
+        
+        autocomplete.addListener('place_changed', fillInAddress);
+      }
+
+      function fillInAddress() {
+        var place = autocomplete.getPlace();
+
+        for (var component in componentForm) {
+          document.getElementById(component).value = '';
+          document.getElementById(component).disabled = false;
+        }
+
+        for (var i = 0; i < place.address_components.length; i++) {
+          var addressType = place.address_components[i].types[0];
+          if (componentForm[addressType]) {
+            var val = place.address_components[i][componentForm[addressType]];
+            document.getElementById(addressType).value = val;
+          }
+        }
+      }
+
+    
+      function geolocate() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var geolocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+            var circle = new google.maps.Circle({
+              center: geolocation,
+              radius: position.coords.accuracy
+            });
+            autocomplete.setBounds(circle.getBounds());
+          });
+        }
+      }
+    </script>
+    <script>
+        $("[data-toggle='popover']").popover({ trigger: "hover" });
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOfCiFMuWl_6DzM4BsVFPYZ7ZvWmHcKR0&libraries=places&callback=initAutocomplete" async="" defer="defer"></script>
+
+}

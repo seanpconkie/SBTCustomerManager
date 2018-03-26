@@ -248,7 +248,7 @@ namespace SBTCustomerManager.Controllers
                     var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
                     await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
-                    //await _signInManager.SignInAsync(user, isPersistent: false);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
 
                     // create additional user info
                     var contact = new UserContact();
@@ -487,6 +487,7 @@ namespace SBTCustomerManager.Controllers
             var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
             if (result.Succeeded)
             {
+                await _emailSender.SendPasswordChangeNotification(user.Email);
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
             }
             AddErrors(result);

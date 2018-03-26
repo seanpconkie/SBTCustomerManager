@@ -13,5 +13,20 @@ namespace SBTCustomerManager.Models.UserDataModels
                 IsMessageRead = false
             };
         }
+
+        public static UserMessage PasswordChanged(string userID, string name)
+        {
+            return new UserMessage
+            {
+                UserId = userID,
+                Title = "Password Changed",
+                Message = string.Format(
+@"Your password has been changed.
+If this was not you then select 'Forgotten Password' from the login page."
+                , name),
+                MessageDate = DateTime.Now,
+                IsMessageRead = false
+            };
+        }
     }
 }
