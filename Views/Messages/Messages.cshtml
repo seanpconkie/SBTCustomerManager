@@ -1,0 +1,133 @@
+﻿@model SBTCustomerManager.Models.UserDataModels.MessageViewModel
+@{
+    ViewData["Title"] = "Messages";
+}
+
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+<div class="w3-container">
+    <table id="messages" class="display">
+        <thead>
+            <tr>
+                <th style="width: 20px"></th>
+                <th style="width: 200px">Date</th>
+                <th>Message</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var message in Model.UserMessages)
+            {
+                <tr>
+                    <td class="w3-center">
+                    @if (message.IsMessageRead)
+                    {
+                        <i class="far fa-envelope-open"></i>
+                    }
+                    else
+                    {
+                        <i class="far fa-envelope"></i>
+                    }
+                    </td>
+                    <td class="w3-center">@message.MessageDate</td>
+                    <td><a class="js-view" href="javascript:void(0);" data-message-id="@message.Id" onclick="document.getElementById('id01').style.display='block'">@message.Title</a></td>
+                    <td class="w3-center" style="width: 50px"><a class="js-delete" href="javascript:void(0);" data-message-id="@message.Id"><i class="far fa-trash-alt"></i></a></td>
+                </tr>
+            }
+        </tbody>
+    </table>    
+</div>
+
+<!-- Modal that pops up when you click on "New Message" -->
+<div id="id01" class="w3-modal" style="z-index:4">
+    <div class="w3-modal-content w3-animate-zoom">
+        <div class="w3-container w3-padding">
+            <span onclick="document.getElementById('id01').style.display='none'"
+            class="w3-button w3-right"><i class="fas fa-times"></i></span>
+            <div id="msgContainerId" class="w3-container">
+                
+            </div>
+        </div>
+    </div>    
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#messages").DataTable();
+
+            $("#messages").on("click", ".js-delete", function() {
+                    var button = $(this);
+
+                    if(confirm("Are you sure you want to delete this message?")) {
+                        $.ajax({
+                            url: "/api/messages/" + button.attr("data-message-id"),
+                            method: "DELETE",
+                            success: function() {
+                                table.ajax.reload();
+                            }
+                        })
+                    }
+            
+                })
+
+            $("#messages").on("click", ".js-view", function () {
+                    $.ajax({
+                        url: "/api/messages/" + $(this).attr("data-message-id"),
+                        method: "PUT",
+                        dataSrc: "",
+                        success: function(data) {
+                            var msgContainer = document.getElementById("msgContainerId");
+    
+                            //remove children
+                            while (msgContainer.hasChildNodes()) {
+                                msgContainer.removeChild(msgContainer.firstChild);
+                            }
+
+                            //add new children
+                            var newBr = document.createElement("br");
+                            
+                            var newHeader = document.createElement("h2");
+                            newHeader.textContent = "Subject: " + data.title;
+                            newHeader.className = "w3-opacity"
+
+                            var newDate = document.createElement("h5");
+                            var string = data.messageDate
+                
+                            var today = new Date(string.substring(0,4),string.substring(5,7)-1,string.substring(8,10),string.substring(11,13),string.substring(14,16),string.substring(17,19));
+                            var dd = today.getDate();
+                            var mm = today.getMonth()+1; //January is 0!
+
+                            var yyyy = today.getFullYear();
+                            if(dd<10){
+                                dd='0'+dd;
+                            } 
+                            if(mm<10){
+                                mm='0'+mm;
+                            } 
+    
+                            newDate.textContent = dd+'/'+mm+'/'+today.getFullYear() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+
+                            var newHr = document.createElement("hr");
+
+                            var newPara = document.createElement("p");
+                            newPara.textContent = data.message
+                            
+                            msgContainer.appendChild(newHeader);
+                            msgContainer.appendChild(newDate);
+                            msgContainer.appendChild(newHr);
+                            msgContainer.appendChild(newPara);
+                            console.log( "Sample of data:", data);
+                            
+
+                            }
+                    });
+                });
+    
+        });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>  
+}

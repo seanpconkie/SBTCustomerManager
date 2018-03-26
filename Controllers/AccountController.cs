@@ -295,6 +295,8 @@ namespace SBTCustomerManager.Controllers
                     _context.SaveChanges();
 
                     // Create welcome message
+                    _context.Add(Messages.WelcomeMessage(user.Id, newUser.Name));
+                    _context.SaveChanges();
 
                     // Add User Role TEMP
 

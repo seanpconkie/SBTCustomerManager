@@ -1,0 +1,53 @@
+﻿@{ 
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+    <h2>
+        Manage your account
+        <a class="w3-bar-item w3-button w3-hover-black w3-hide-medium w3-hide-large w3-right" href="javascript:void(0);" onclick="toggleFunction()" title="Toggle Navigation Menu">
+            <i class="fa fa-bars"></i>
+        </a>
+    </h2>
+    <div class="w3-row-padding w3-margin-top">
+
+        <div class="w3-quarter w3-hide-small">
+            <div class="w3-container" style="min-height:460px">
+                @Html.Partial("_UserSideBar")
+            </div>
+        </div>
+        <!-- small screen navbar -->
+        <div>
+            <div id="navDemo" class="w3-bar-block w3-hide w3-hide-large w3-hide-medium">
+                @Html.Partial("_UserSideBar")
+            </div>   
+        </div>
+        
+        <div class="w3-threequarter">
+            <h2>Your Messages</h2>
+            <hr />
+            <div class="w3-container">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    
+
+
+
+
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+
+    <script>
+        // Used to toggle the menu on small screens when clicking on the menu button
+        function toggleFunction() {
+            var x = document.getElementById("navDemo");
+            if (x.className.indexOf("w3-show") == -1) {
+                x.className += " w3-show";
+            } else {
+                x.className = x.className.replace(" w3-show", "");
+            }
+        }
+    </script>
+
+}        

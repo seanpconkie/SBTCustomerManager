@@ -595,16 +595,6 @@ namespace SBTCustomerManager.Controllers
             return View(nameof(ShowRecoveryCodes), model);
         }
 
-        public async Task<IActionResult> Messages()
-        {
-
-            var user = await _userManager.GetUserAsync(User);
-            var viewModel = new MessageViewModel { UserMessages = _context.UserMessages.Where(c => c.UserId == user.Id) };
-
-            return View(viewModel);
-
-        }
-
         #region Helpers
 
         private void AddErrors(IdentityResult result)

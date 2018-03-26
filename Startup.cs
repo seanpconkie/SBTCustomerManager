@@ -98,6 +98,11 @@ namespace SBTCustomerManager
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapRoute(
+                    name: "getMessage"
+                    , template: "api/messages/{id}/{userId}"
+                    , defaults: new { controller = "messages", action = "GetMessage" });
             });
         }
     }

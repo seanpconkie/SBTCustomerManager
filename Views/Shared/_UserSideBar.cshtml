@@ -7,7 +7,7 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage" class="w3-container w3-padding w3-button w3-block w3-border-bottom">Account Details</a>
-    <a asp-area="" asp-controller="Manage" asp-action="Messages" title="Manage" class="w3-container w3-padding w3-button w3-block w3-border-bottom">Messages</a>
+    <a asp-area="" asp-controller="Messages" asp-action="Messages" title="Messages" class="w3-container w3-padding w3-button w3-block w3-border-bottom">Messages</a>
 }
 else
 {
