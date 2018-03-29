@@ -44,6 +44,8 @@ namespace SBTCustomerManager.Controllers
                 _context = context;
             }
 
+        [TempData]
+        public string StatusMessage { get; set; }
 
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -166,7 +168,8 @@ namespace SBTCustomerManager.Controllers
                     _context.Add(Messages.WelcomeMessage(user.Id, newUser.Name));
                     _context.SaveChanges();
 
-                    // Add User Role TEMP
+                    // Add CanViewCompany role
+                    await _userManager.AddToRoleAsync(user, "CanViewCompany");
 
                     // Re-Set user password
                     var passwordCode = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -182,7 +185,6 @@ namespace SBTCustomerManager.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-
 
         #region Helpers
 

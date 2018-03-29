@@ -25,7 +25,6 @@ namespace SBTCustomerManager.Models.UserDataModels
         public long Id { get; set; }
         public string UserId { get; set; }
 
-
         public UserContact UserContact { get; set; }
 
         [Display(Name = "Contact Details")]
@@ -35,6 +34,9 @@ namespace SBTCustomerManager.Models.UserDataModels
 
         [Display(Name = "Company Details")]
         public long CompanyId { get; set; }
+
+        [Display(Name = "Role")]
+        public long UserRole { get; set; }
 
     }
 }

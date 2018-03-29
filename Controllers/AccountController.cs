@@ -71,6 +71,7 @@ namespace SBTCustomerManager.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
+                
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
@@ -281,6 +282,9 @@ namespace SBTCustomerManager.Controllers
                         _context.SaveChanges();
 
                         companyId = company.Id;
+
+                        // Add CanManageCompany role
+                        await _userManager.AddToRoleAsync(user, "CanManageCompany");
                     }
 
                     newUser.ForeName = model.ForeName;
@@ -299,13 +303,15 @@ namespace SBTCustomerManager.Controllers
                     _context.Add(Messages.WelcomeMessage(user.Id, newUser.Name));
                     _context.SaveChanges();
 
-                    // Add User Role TEMP
+                    // Add CanViewCompany role
+                    await _userManager.AddToRoleAsync(user,"CanViewCompany");
 
                     return RedirectToAction(nameof(ManageController.Index), "Manage");
 
                 }
                 AddErrors(result);
             }
+
 
             // If we got this far, something failed, redisplay form
             return View(model);

@@ -23,8 +23,14 @@
     <None Remove="Views\User\_UserNav.cshtml" />
     <None Remove="Views\User\_Layout.html" />
     <None Remove="Views\User\_StatusMessage.cshtml" />
+    <None Remove="Models\CompanyDataModel\CompanyUserViewModel.css" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\UserDataModels\" />
+    <Folder Include="Controllers\api\" />
+    <Folder Include="Views\Messages\" />
+    <Folder Include="Models\CompanyDataModel\" />
+    <Folder Include="Views\Company\" />
+    <Folder Include="Views\CompanyUser\" />
   </ItemGroup>
 </Project>
