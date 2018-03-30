@@ -9,7 +9,8 @@ namespace SBTCustomerManager.Controllers
     {
         public IActionResult Index()
         {
-            return RedirectToAction(nameof(AccountController.Login), "Account");
+            //return RedirectToAction(nameof(AccountController.Login), "Account");
+            return RedirectToAction(nameof(ManageController.Index),"Manage");
         }
 
         public IActionResult About()

@@ -83,7 +83,7 @@ namespace SBTCustomerManager.Controllers
             var viewModel = new CompanyViewModel
             {
                 CompanyDetails = _context.CompanyDetails.SingleOrDefault(c => c.Id == userDetail.CompanyId),
-                CompanyUsers = _context.UserDetails.Where(c => c.CompanyId == userDetail.CompanyId)
+                CompanyUsers = _context.UserDetails.Where(c => c.CompanyId == userDetail.CompanyId).Where(c => c.UserId != userDetail.UserId)
             };
 
             viewModel.CompanyContact = _context.UserDetails.Include(c => c.UserContact).SingleOrDefault(c => c.UserId == viewModel.CompanyDetails.UserId);
@@ -169,7 +169,8 @@ namespace SBTCustomerManager.Controllers
                     _context.SaveChanges();
 
                     // Add CanViewCompany role
-                    await _userManager.AddToRoleAsync(user, "CanViewCompany");
+                    var roleName = _context.Roles.SingleOrDefault(c => c.Name == "CanViewCompany");
+                    await _userManager.AddToRoleAsync(user, roleName.Name);
 
                     // Re-Set user password
                     var passwordCode = await _userManager.GeneratePasswordResetTokenAsync(user);

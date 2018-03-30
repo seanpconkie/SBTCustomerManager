@@ -78,7 +78,7 @@ namespace SBTCustomerManager.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return RedirectToAction(nameof(ManageController.Index), "Manage");
+                    return RedirectToLocal(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
                 {
@@ -284,7 +284,8 @@ namespace SBTCustomerManager.Controllers
                         companyId = company.Id;
 
                         // Add CanManageCompany role
-                        await _userManager.AddToRoleAsync(user, "CanManageCompany");
+                        var roleName = _context.Roles.SingleOrDefault(c => c.Name == "CanViewCompany");
+                        await _userManager.AddToRoleAsync(user, roleName.Name);
                     }
 
                     newUser.ForeName = model.ForeName;

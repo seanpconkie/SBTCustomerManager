@@ -5,9 +5,8 @@
 }
 
 <div class="w3-bar">
-    <div class="w3-bar-item w3-button"><a asp-area="" asp-controller="Company" asp-action="Index" title="Company">Company Details</a></div>
-    <div class="@UserNavPages.IndexNavClass(ViewContext) w3-bar-item w3-button"><a asp-action="Index">Details</a></div>
-    <div class="@UserNavPages.ContactNavClass(ViewContext) w3-bar-item w3-button"><a asp-action="UserContact">Contact</a></div>
-    <div class="@UserNavPages.ProfileNavClass(ViewContext) w3-bar-item w3-button"><a asp-action="UserProfile">Profile</a></div>        
+    <div class="w3-bar-item w3-button"><a asp-area="" asp-controller="Company" asp-action="Index" title="Company"><i class="fas fa-info w3-margin-right"></i>Company Details</a></div>
+    <div class="w3-bar-item w3-button"><a asp-area="" asp-controller="Company" asp-action="Users" title="Company"><i class="fas fa-users w3-margin-right"></i>Company Users</a></div>
+
 </div>
 

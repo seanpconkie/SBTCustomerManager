@@ -16,7 +16,7 @@ namespace SBTCustomerManager.Models
         public void SetImageUrl ()
         {
             Random rnd = new Random();
-            int imageID = rnd.Next(1, 12);
+            int imageID = rnd.Next(1, 13);
 
             switch (imageID)
             {
@@ -55,6 +55,9 @@ namespace SBTCustomerManager.Models
                     break;
                 case 12:
                     this.ImageURL = "https://farm5.staticflickr.com/4782/39909537065_f09a2f735c_o.jpg";
+                    break;
+                case 13:
+                    this.ImageURL = "https://farm1.staticflickr.com/892/40392342684_4a1ed2ac93_o.jpg";
                     break;
             }
         }

@@ -1,0 +1,61 @@
+﻿@model SBTCustomerManager.Models.CompanyDataModel.CompanyUserViewModel
+@{
+    ViewData["Title"] = @Model.UserDetails.Name;
+    ViewData.AddActivePage(UserNavPages.UserDetail);
+}
+
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+
+    <div class="w3-row-padding w3-margin-top">
+
+        <form method="post">
+            <div class="w3-bar">
+                <div asp-validation-summary="All" class="text-danger w3-bar-item"></div>
+                <button type="submit" class="w3-button w3-bar-item w3-right accordian1 w3-text-white" data-toggle="popover" data-trigger="focus" data-content="Save Changes" data-placement="top"><i class="fas fa-save"></i></button>
+                <button type="reset" class="w3-button w3-bar-item w3-right accordian2 w3-text-white" data-toggle="popover" data-trigger="focus" data-content="Reset" data-placement="top"><i class="fas fa-redo"></i></button>
+            </div>
+
+            <div class="w3-half">
+                <div class="w3-container">
+                    <label asp-for="UserDetails.Name" ></label>
+                    <input asp-for="UserDetails.Name" class=" w3-input" disabled=""/>
+
+                    <div class="form-group">
+                        <label asp-for="UserDetails.UserRole"></label>
+                        @Html.DropDownListFor(m => m.UserDetails.UserRole, 
+                        new List<SelectListItem>
+                        {
+                            new SelectListItem() { Text = "Admin", Value = "1" },
+                            new SelectListItem() { Text = "Senior Manager", Value = "2" },
+                            new SelectListItem() { Text = "Manager", Value = "3" },
+                            new SelectListItem() { Text = "Assisstant Manager", Value = "4" },
+                            new SelectListItem() { Text = "Staff", Value = "0" }
+                        }
+
+                        ,"Select Role", new {@class = "w3-input", required=""})
+                        <span asp-validation-for="UserDetails.UserRole" class="text-danger"></span>
+                    </div>
+                
+                    <input asp-for="UserDetails.UserId" class=" w3-input" type="hidden"/>
+                    <input asp-for="CompanyDetails.UserId" class=" w3-input" type="hidden"/>
+                </div>
+            </div>
+
+            <div class="w3-half">
+                <div class="w3-container">
+                    <div class="w3-row">
+                        <div class="w3-half"><label>Set as Company Contact</label></div>
+                        <div class="w3-half"><input asp-for="IsCompanyContact" class="w3-input" type="checkbox"/></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        $("[data-toggle='popover']").popover({ trigger: "hover" });
+    </script>
+}

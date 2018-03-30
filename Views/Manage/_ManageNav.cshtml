@@ -5,9 +5,9 @@
 }
 
 <div class="w3-bar">
-    <div class="@ManageNavPages.IndexNavClass(ViewContext) w3-bar-item w3-button"><a asp-action="Index">Profile</a></div>
-    <div class="@ManageNavPages.IndexNavClass(ViewContext) w3-bar-item w3-button"><a asp-action="Contact">Contact Info</a></div>
-    <div class="@ManageNavPages.ChangePasswordNavClass(ViewContext) w3-bar-item w3-button"><a asp-action="ChangePassword">Password</a></div>
+    <div class="@ManageNavPages.IndexNavClass(ViewContext) w3-bar-item w3-button"><a asp-action="Index"><i class="fas fa-user w3-margin-right"></i>Profile</a></div>
+    <div class="@ManageNavPages.IndexNavClass(ViewContext) w3-bar-item w3-button"><a asp-action="Contact"><i class="fas fa-address-book w3-margin-right"></i>Contact Info</a></div>
+    <div class="@ManageNavPages.ChangePasswordNavClass(ViewContext) w3-bar-item w3-button"><a asp-action="ChangePassword"><i class="fas fa-key w3-margin-right"></i>Password</a></div>
     @if (hasExternalLogins)
     {
         <div class="@ManageNavPages.ExternalLoginsNavClass(ViewContext) w3-bar-item w3-button"><a asp-action="ExternalLogins">External logins</a></div>

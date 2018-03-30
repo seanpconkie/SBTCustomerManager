@@ -46,39 +46,59 @@ namespace SBTCustomerManager.Controllers
         public string StatusMessage { get; set; }
 
         [HttpGet]
-        public async Task<IActionResult> UserContact()
+        public IActionResult UserContact(long id)
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
 
-            var model = new CompanyViewModel
+            var model = new CompanyUserViewModel
             {
-                
+                StatusMessage = StatusMessage
             };
+
+            model.UserDetails = _context.UserDetails.Include(c => c.UserContact).SingleOrDefault(c => c.Id == id);
+            model.CompanyDetails = _context.CompanyDetails.SingleOrDefault(c => c.Id == model.UserDetails.CompanyId);
 
             return View(model);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public IActionResult UserDetail(long id)
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
 
-            var model = new CompanyViewModel
+            var model = new CompanyUserViewModel
             {
-                
+                StatusMessage = StatusMessage
             };
+
+            model.UserDetails = _context.UserDetails.Include(c => c.UserContact).SingleOrDefault(c => c.Id == id);
+            model.CompanyDetails = _context.CompanyDetails.SingleOrDefault(c => c.Id == model.UserDetails.CompanyId);
+
+            if (model.CompanyDetails.UserId != model.UserDetails.UserId)
+            {
+                model.SetCompanyContact();
+            }
 
             return View(model);
 
         }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UserDetail(CompanyUserViewModel model)
+        {
+            if (model.IsCompanyContact == true && model.CompanyDetails.UserId != model.UserDetails.UserId)
+            {
+                model.SetCompanyContact();
+                StatusMessage = "Company contact has been updated";
+            }
+            else if (model.IsCompanyContact == false && model.CompanyDetails.UserId == model.UserDetails.UserId)
+            {
+                StatusMessage = "There must be a user set as company contact.\nSet a different user as company contact to remove this user.";
+            }
+
+            return RedirectToAction(nameof(UserDetail));
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> UserProfile()
@@ -89,7 +109,7 @@ namespace SBTCustomerManager.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var model = new CompanyViewModel
+            var model = new CompanyUserViewModel
             {
 
             };
