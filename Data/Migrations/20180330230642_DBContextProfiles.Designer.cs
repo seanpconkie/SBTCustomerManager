@@ -11,9 +11,10 @@ using System;
 namespace SBTCustomerManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180330230642_DBContextProfiles")]
+    partial class DBContextProfiles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -209,42 +210,6 @@ namespace SBTCustomerManager.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Profiles");
-                });
-
-            modelBuilder.Entity("SBTCustomerManager.Models.UserDataModels.RoleDescription", b =>
-                {
-                    b.Property<string>("RoleId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Description");
-
-                    b.HasKey("RoleId");
-
-                    b.ToTable("RoleDescriptions");
-                });
-
-            modelBuilder.Entity("SBTCustomerManager.Models.UserDataModels.RoleType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Type");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Types");
-                });
-
-            modelBuilder.Entity("SBTCustomerManager.Models.UserDataModels.RoleTypes", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("RoleId");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RoleTypes");
                 });
 
             modelBuilder.Entity("SBTCustomerManager.Models.UserDataModels.UserContact", b =>

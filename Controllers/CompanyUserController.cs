@@ -2,10 +2,12 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SBTCustomerManager.Data;
@@ -49,46 +51,65 @@ namespace SBTCustomerManager.Controllers
         public IActionResult UserContact(long id)
         {
 
-            var model = new CompanyUserViewModel
+            var model = LoadCompanyViewModel(id);
+
+            if (model.CompanyDetails.UserId == model.UserDetails.UserId)
             {
-                StatusMessage = StatusMessage
-            };
-
-            model.UserDetails = _context.UserDetails.Include(c => c.UserContact).SingleOrDefault(c => c.Id == id);
-            model.CompanyDetails = _context.CompanyDetails.SingleOrDefault(c => c.Id == model.UserDetails.CompanyId);
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public IActionResult UserDetail(long id)
-        {
-
-            var model = new CompanyUserViewModel
-            {
-                StatusMessage = StatusMessage
-            };
-
-            model.UserDetails = _context.UserDetails.Include(c => c.UserContact).SingleOrDefault(c => c.Id == id);
-            model.CompanyDetails = _context.CompanyDetails.SingleOrDefault(c => c.Id == model.UserDetails.CompanyId);
-
-            if (model.CompanyDetails.UserId != model.UserDetails.UserId)
-            {
-                model.SetCompanyContact();
+                model = SetCompanyContact(model);
             }
 
             return View(model);
 
         }
 
+        [HttpGet]
+        public IActionResult UserDetail(long id)
+        {
+
+            var model = LoadCompanyViewModel(id);
+
+            if (model.CompanyDetails.UserId == model.UserDetails.UserId)
+            {
+                model = SetCompanyContact(model);
+            }
+
+            return View(model);
+
+        }
+
+        [HttpGet]
+        public IActionResult UserProfile(long id)
+        {
+
+            var model = LoadCompanyViewModel(id);
+
+            if (model.CompanyDetails.UserId == model.UserDetails.UserId)
+            {
+                model = SetCompanyContact(model);
+            }
+
+            // set role list
+            model.RoleDetails = SetRoleList(model.UserDetails.UserId);
+
+            return View(model);
+
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult UserDetail(CompanyUserViewModel model)
         {
+            // Check company contact
             if (model.IsCompanyContact == true && model.CompanyDetails.UserId != model.UserDetails.UserId)
             {
-                model.SetCompanyContact();
+                CompanyDetail companyDetail = _context.CompanyDetails.SingleOrDefault(c => c.Id == model.CompanyDetails.Id);
+
+                model = SetCompanyContact(model);
+
+                companyDetail.UserId = model.CompanyDetails.UserId;
+
+                _context.SaveChanges();
+
                 StatusMessage = "Company contact has been updated";
             }
             else if (model.IsCompanyContact == false && model.CompanyDetails.UserId == model.UserDetails.UserId)
@@ -96,25 +117,18 @@ namespace SBTCustomerManager.Controllers
                 StatusMessage = "There must be a user set as company contact.\nSet a different user as company contact to remove this user.";
             }
 
-            return RedirectToAction(nameof(UserDetail));
-        }
-
-
-        [HttpGet]
-        public async Task<IActionResult> UserProfile()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
+            // update role details
+            UserDetail userDetail = _context.UserDetails.SingleOrDefault(c => c.UserId == model.UserDetails.UserId);
+            if (userDetail.ProfileId != model.UserDetails.Profile.Id)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                userDetail.ProfileId = model.UserDetails.Profile.Id;
+
+                _context.SaveChanges();
+
+                StatusMessage = "User role has been updated";
             }
 
-            var model = new CompanyUserViewModel
-            {
-
-            };
-
-            return View(model);
+            return RedirectToAction(nameof(UserDetail));
         }
 
         #region Helpers
@@ -141,6 +155,73 @@ namespace SBTCustomerManager.Controllers
 
         #endregion
 
+        #region Methods
+        [NonAction]
+        public CompanyUserViewModel SetCompanyContact(CompanyUserViewModel model)
+        {
+            model.IsCompanyContact = true;
+
+            model.CompanyDetails.UserId = model.UserDetails.UserId;
+
+            return model;
+
+        }
+        [NonAction]
+        public CompanyUserViewModel LoadCompanyViewModel(long id)
+        {
+
+            var model = new CompanyUserViewModel
+            {
+                StatusMessage = StatusMessage
+            };
+            List<SelectListItem> userRoles = new List<SelectListItem>();
+            var resultList = _context.Profiles.ToList();
+
+            foreach (var item in resultList)
+            {
+                userRoles.Add(new SelectListItem { Value = item.Id.ToString(), Text = item.Role });
+            }
+
+            model.UserRoles = userRoles;
+
+            model.UserDetails = _context.UserDetails.Include(c => c.UserContact).SingleOrDefault(c => c.Id == id);
+            model.CompanyDetails = _context.CompanyDetails.SingleOrDefault(c => c.Id == model.UserDetails.CompanyId);
+
+            return model;
+
+        }
+        [NonAction]
+        public List<RoleDetail> SetRoleList(string userId)
+        {
+            List<RoleDetail> outputList = new List<RoleDetail>();
+            var roleList = _context.Roles.ToList();
+            var activeRoles = _context.UserRoles.Where(c => c.UserId == userId).ToList();
+
+            foreach (var role in roleList)
+            {
+                var newRole = new RoleDetail();
+
+                newRole.RoleId = role.Id;
+                newRole.Name = role.Name;
+                newRole.TypeId = _context.RoleTypes.SingleOrDefault(c => c.RoleId == role.Id).Id;
+                newRole.Type = _context.Types.SingleOrDefault(c => c.Id == newRole.TypeId);
+                newRole.Description = _context.RoleDescriptions.SingleOrDefault(c => c.RoleId == newRole.RoleId).Description;
+
+                if (activeRoles.IndexOf(new IdentityUserRole<string> {RoleId = newRole.RoleId}) == -1)
+                {
+                    newRole.IsSelected = false;
+                }
+                else
+                {
+                    newRole.IsSelected = true;
+                }
+
+            }
+
+            return outputList;
+
+        }
+        #endregion
 
     }
 }

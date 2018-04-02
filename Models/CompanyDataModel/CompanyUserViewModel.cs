@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using SBTCustomerManager.Models.CompanyDataModel;
 using SBTCustomerManager.Models.UserDataModels;
@@ -11,18 +14,13 @@ namespace SBTCustomerManager.Models.CompanyDataModel
         public UserDetail UserDetails { get; set; }
         public CompanyDetail CompanyDetails { get; set; }
         public string StatusMessage { get; set; }
+        public List<SelectListItem> UserRoles { get; set; }
         [Display(Name = "Company Contact")]
         public bool IsCompanyContact { get; set; }
+        //public List<IdentityRole> RoleList { get; set; }
+        //public List<IdentityUserRole<string>> ActiveRoles { get; set; }
+        public List<RoleDetail> RoleDetails { get; set; }
         #endregion
 
-        #region Methods
-        public void SetCompanyContact ()
-        {
-            IsCompanyContact = true;
-
-            CompanyDetails.UserId = UserDetails.UserId;
-
-        }
-        #endregion
     }
 }

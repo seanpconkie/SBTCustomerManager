@@ -1,4 +1,4 @@
-﻿@using SBTCustomerManager.Views.Company
+﻿@using SBTCustomerManager.Views.CompanyUser
 @inject SignInManager<ApplicationUser> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();

@@ -70,8 +70,6 @@ namespace SBTCustomerManager.Controllers
                 UserDetail = _context.UserDetails.Include(c => c.UserContact).Include(u => u.Company).SingleOrDefault(c => c.UserId == user.Id)
             };
 
-
-
             return View(model);
 
         }
@@ -206,6 +204,8 @@ namespace SBTCustomerManager.Controllers
             userContact.Country = model.UserDetail.UserContact.Country;
             userContact.Postcode = model.UserDetail.UserContact.Postcode;
             userContact.PostTown = model.UserDetail.UserContact.PostTown;
+
+            _context.SaveChanges();
 
             StatusMessage = "Your profile has been updated";
             return RedirectToAction(nameof(Index));

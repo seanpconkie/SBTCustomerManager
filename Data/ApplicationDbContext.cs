@@ -12,6 +12,10 @@ namespace SBTCustomerManager.Data
         public DbSet<UserContact> UserContacts { get; set; }
         public DbSet<UserMessage> UserMessages { get; set; }
         public DbSet<UserDetail> UserDetails { get; set; }
+        public DbSet<Profile> Profiles { get; set; }
+        public DbSet<RoleTypes> RoleTypes { get; set; }
+        public DbSet<RoleType> Types { get; set; }
+        public DbSet<RoleDescription> RoleDescriptions { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

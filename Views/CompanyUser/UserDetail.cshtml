@@ -1,10 +1,18 @@
 ﻿@model SBTCustomerManager.Models.CompanyDataModel.CompanyUserViewModel
 @{
     ViewData["Title"] = @Model.UserDetails.Name;
-    ViewData.AddActivePage(UserNavPages.UserDetail);
 }
 
-@Html.Partial("_StatusMessage", Model.StatusMessage)
+     <div class="w3-bar">
+        <div class="w3-bar-item w3-button"><a asp-area="" asp-controller="Company" asp-action="Index" title="Company"><i class="fas fa-info w3-margin-right"></i>Company Details</a></div>
+        <div class="w3-bar-item w3-button"><a asp-area="" asp-controller="Company" asp-action="Users" title="Company"><i class="fas fa-users w3-margin-right"></i>Company Users</a></div>
+        <div class="w3-bar-item w3-button"><a href="/CompanyUser/UserDetail/@Model.UserDetails.Id"><i class="far fa-user-circle w3-margin-right"></i>User Detail</a></div>
+        <div class="w3-bar-item w3-button"><a href="/CompanyUser/UserContact/@Model.UserDetails.Id"><i class="far fa-address-book w3-margin-right"></i>User Contact</a></div>
+        <div class="w3-bar-item w3-button"><a href="/CompanyUser/UserProfile/@Model.UserDetails.Id"><i class="far fa-id-card  w3-margin-right"></i>User Profile</a></div>
+    </div>
+    <hr>
+
+    @Html.Partial("_StatusMessage", Model.StatusMessage)
 
     <div class="w3-row-padding w3-margin-top">
 
@@ -21,28 +29,20 @@
                     <input asp-for="UserDetails.Name" class=" w3-input" disabled=""/>
 
                     <div class="form-group">
-                        <label asp-for="UserDetails.UserRole"></label>
-                        @Html.DropDownListFor(m => m.UserDetails.UserRole, 
-                        new List<SelectListItem>
-                        {
-                            new SelectListItem() { Text = "Admin", Value = "1" },
-                            new SelectListItem() { Text = "Senior Manager", Value = "2" },
-                            new SelectListItem() { Text = "Manager", Value = "3" },
-                            new SelectListItem() { Text = "Assisstant Manager", Value = "4" },
-                            new SelectListItem() { Text = "Staff", Value = "0" }
-                        }
-
-                        ,"Select Role", new {@class = "w3-input", required=""})
-                        <span asp-validation-for="UserDetails.UserRole" class="text-danger"></span>
+                        <label asp-for="UserDetails.Profile.Role"></label>
+                        <span asp-validation-for="UserDetails.Profile.Id" class="text-danger"></span>
+                        @Html.DropDownListFor(m => m.UserDetails.Profile.Id,Model.UserRoles,"Select Role", new {@class = "w3-input", required=""})
                     </div>
                 
-                    <input asp-for="UserDetails.UserId" class=" w3-input" type="hidden"/>
-                    <input asp-for="CompanyDetails.UserId" class=" w3-input" type="hidden"/>
+                    <input asp-for="UserDetails.UserId" class="w3-input" type="hidden"/>
+                    <input asp-for="CompanyDetails.UserId" class="w3-input" type="hidden"/>
+                    <input asp-for="CompanyDetails.Id" class="w3-input" type="hidden"/>
                 </div>
             </div>
 
             <div class="w3-half">
                 <div class="w3-container">
+                    <br>
                     <div class="w3-row">
                         <div class="w3-half"><label>Set as Company Contact</label></div>
                         <div class="w3-half"><input asp-for="IsCompanyContact" class="w3-input" type="checkbox"/></div>

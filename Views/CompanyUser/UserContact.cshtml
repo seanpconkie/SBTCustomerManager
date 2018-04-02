@@ -1,10 +1,63 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
+﻿@model SBTCustomerManager.Models.CompanyDataModel.CompanyUserViewModel
+@{
+    ViewData["Title"] = @Model.UserDetails.Name;
+}
 
-</body>
-</html>
+     <div class="w3-bar">
+        <div class="w3-bar-item w3-button"><a asp-area="" asp-controller="Company" asp-action="Index" title="Company"><i class="fas fa-info w3-margin-right"></i>Company Details</a></div>
+        <div class="w3-bar-item w3-button"><a asp-area="" asp-controller="Company" asp-action="Users" title="Company"><i class="fas fa-users w3-margin-right"></i>Company Users</a></div>
+        <div class="w3-bar-item w3-button"><a href="/CompanyUser/UserDetail/@Model.UserDetails.Id"><i class="far fa-user-circle w3-margin-right"></i>User Detail</a></div>
+        <div class="w3-bar-item w3-button"><a href="/CompanyUser/UserContact/@Model.UserDetails.Id"><i class="far fa-address-book w3-margin-right"></i>User Contact</a></div>
+        <div class="w3-bar-item w3-button"><a href="/CompanyUser/UserProfile/@Model.UserDetails.Id"><i class="far fa-id-card  w3-margin-right"></i>User Profile</a></div>
+    </div>
+    <hr>
+
+    @Html.Partial("_StatusMessage", Model.StatusMessage)
+
+    <div class="w3-row-padding w3-margin-top">
+
+        <div class="w3-half">
+            <div class="w3-container">
+                <label class=""><i class="fas fa-at fa-fw w3-margin-right"></i> Contact e-mail</label>
+                <div class="input-group">
+                    <input asp-for="UserDetails.UserContact.Email" class="w3-input"/>
+                    <span class="input-group-addon" aria-hidden="true"><span class="glyphicon glyphicon-ok text-success"></span></span>
+                </div>
+
+                <label class=""><i class="fas fa-mobile-alt fa-fw w3-margin-right"></i> Mobile Phone</label>
+                <input class=" w3-input" asp-for="UserDetails.UserContact.MobilePhone" />
+
+                <label class=""><i class="fas fa-phone fa-fw w3-margin-right"></i> Work Phone</label>
+                <input class=" w3-input" asp-for="UserDetails.UserContact.WorkPhone" />
+
+                <label class=""><i class="fas fa-phone fa-fw w3-margin-right"></i> Other Phone</label>
+                <input class=" w3-input" asp-for="UserDetails.UserContact.OtherPhone" />
+
+            
+                <input asp-for="UserDetails.UserId" class="w3-input" type="hidden"/>
+                <input asp-for="CompanyDetails.UserId" class="w3-input" type="hidden"/>
+                <input asp-for="CompanyDetails.Id" class="w3-input" type="hidden"/>
+            </div>
+        </div>
+
+        <div class="w3-half">
+            <div class="w3-container">
+                <label><i class="fas fa-map-marker fa-fw w3-margin-right"></i>Address</label>
+                <textarea class="w3-input" disabled="" style="height: 300px;width: 400px;">
+@Model.UserDetails.UserContact.BuildingNumber @Model.UserDetails.UserContact.AddressLine1
+@Model.UserDetails.UserContact.AddressLine2
+@Model.UserDetails.UserContact.PostTown
+@Model.UserDetails.UserContact.County
+@Model.UserDetails.UserContact.Country
+@Model.UserDetails.UserContact.Postcode</textarea>                        
+            </div>
+        </div>
+    </div>
+    
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        $("[data-toggle='popover']").popover({ trigger: "hover" });
+    </script>
+}

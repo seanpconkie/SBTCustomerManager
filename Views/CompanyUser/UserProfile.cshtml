@@ -1,0 +1,105 @@
+﻿@model SBTCustomerManager.Models.CompanyDataModel.CompanyUserViewModel
+@{
+    ViewData["Title"] = @Model.UserDetails.Name;
+}
+
+     <div class="w3-bar">
+        <div class="w3-bar-item w3-button"><a asp-area="" asp-controller="Company" asp-action="Index" title="Company"><i class="fas fa-info w3-margin-right"></i>Company Details</a></div>
+        <div class="w3-bar-item w3-button"><a asp-area="" asp-controller="Company" asp-action="Users" title="Company"><i class="fas fa-users w3-margin-right"></i>Company Users</a></div>
+        <div class="w3-bar-item w3-button"><a href="/CompanyUser/UserDetail/@Model.UserDetails.Id"><i class="far fa-user-circle w3-margin-right"></i>User Detail</a></div>
+        <div class="w3-bar-item w3-button"><a href="/CompanyUser/UserContact/@Model.UserDetails.Id"><i class="far fa-address-book w3-margin-right"></i>User Contact</a></div>
+        <div class="w3-bar-item w3-button"><a href="/CompanyUser/UserProfile/@Model.UserDetails.Id"><i class="far fa-id-card  w3-margin-right"></i>User Profile</a></div>
+    </div>
+    <hr>
+
+    @Html.Partial("_StatusMessage", Model.StatusMessage)
+
+    <div class="w3-row-padding w3-margin-top">
+
+        <form method="post">
+            <div class="w3-bar">
+                <div asp-validation-summary="All" class="text-danger w3-bar-item"></div>
+                <button type="submit" class="w3-button w3-bar-item w3-right accordian1 w3-text-white" data-toggle="popover" data-trigger="focus" data-content="Save Changes" data-placement="top"><i class="fas fa-save"></i></button>
+                <button type="reset" class="w3-button w3-bar-item w3-right accordian2 w3-text-white" data-toggle="popover" data-trigger="focus" data-content="Reset" data-placement="top"><i class="fas fa-redo"></i></button>
+            </div>
+
+            <div class="">
+                <div class="w3-container">
+                
+                    <input asp-for="UserDetails.UserId" class="w3-input" type="hidden"/>
+                    <input asp-for="CompanyDetails.UserId" class="w3-input" type="hidden"/>
+                    <input asp-for="CompanyDetails.Id" class="w3-input" type="hidden"/>
+
+                    <table id="profiles" class="display">
+                        <thead>
+                            <tr>
+                                <th style="width: 10px"></th>
+                                <th>Id</th>
+                                <th>Profile</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var role in Model.RoleList)
+                            {
+                                <tr>
+                                    @if (Model.ActiveRoles.IndexOf(new IdentityUserRole<string> { RoleId = role.Id }) == -1)
+                                    {
+                                        <td class="w3-center"><input class="w3-input" type="checkbox"/></td>
+                                    }
+                                    else
+                                    {
+                                        <td class="w3-center"><input class="w3-input" type="checkbox" checked=""/></td>
+                                    }
+                                    <td class="w3-center">@role.Id</td>
+                                    <td class="w3-center">@role.Name</td>
+                                    <td>@Model.ActiveRoles.IndexOf(new IdentityUserRole<string> { RoleId = role.Id })</td>
+                                    <td class="w3-center" style="width: 50px"><a class="js-delete" href="javascript:void(0);" data-message-id="@role.Id"><i class="far fa-edit"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Edit Role"></i></a></td>
+                                    <td class="w3-center" style="width: 50px"><a class="js-delete" href="javascript:void(0);" data-message-id="@role.Id"><i class="far fa-trash-alt"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Delete Role"></i></a></td>
+                                </tr>
+                            }
+                            @foreach (var role in Model.RoleDetails)
+                            {
+                                <tr>
+                                    @if (Model.RoleDetails)
+                                    {
+                                        <td class="w3-center"><input class="w3-input" type="checkbox" checked=""/></td>
+                                    }
+                                    else
+                                    {
+                                        <td class="w3-center"><input class="w3-input" type="checkbox"/></td>
+                                    }
+                                    <td class="w3-center">@role.RoleId</td>
+                                    <td class="w3-center"></td>
+                                    <td>@Model.ActiveRoles.IndexOf(new IdentityUserRole<string> { RoleId = role.RoleId })</td>
+                                    <td class="w3-center" style="width: 50px"><a class="js-delete" href="javascript:void(0);" data-message-id="@role.RoleId"><i class="far fa-edit"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Edit Role"></i></a></td>
+                                    <td class="w3-center" style="width: 50px"><a class="js-delete" href="javascript:void(0);" data-message-id="@role.RoleId"><i class="far fa-trash-alt"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Delete Role"></i></a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                
+                </div>
+            </div>
+        </form>
+    </div>
+    
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        $("[data-toggle='popover']").popover({ trigger: "hover" });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#profiles").DataTable();
+    
+        });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script> 
+}

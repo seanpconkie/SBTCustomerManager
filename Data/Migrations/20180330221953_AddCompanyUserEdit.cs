@@ -14,10 +14,6 @@ namespace SBTCustomerManager.Data.Migrations
                 table: "UserDetails",
                 nullable: true);
 
-            migrationBuilder.DropColumn(
-                name: "UserRole",
-                table: "UserDetails");
-
             migrationBuilder.CreateTable(
                 name: "Profile",
                 columns: table => new

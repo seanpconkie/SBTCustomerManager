@@ -17,7 +17,7 @@
         <div asp-validation-summary="All" class="text-danger"></div>
         <div class="w3-half">
             <div class="w3-container">
-                <label class=""><i class="fas fa-at"></i> Contact e-mail</label>
+                <label class=""><i class="fas fa-at fa-fw w3-margin-right"></i> Contact e-mail</label>
                 @if (Model.IsEmailConfirmed)
                 {
                     <div class="input-group">
@@ -33,13 +33,13 @@
                     <br>
                 }
 
-                <label class=""><i class="fas fa-mobile-alt"></i> Mobile Phone</label>
+                <label class=""><i class="fas fa-mobile-alt fa-fw w3-margin-right"></i> Mobile Phone</label>
                 <input class=" w3-input" asp-for="UserDetail.UserContact.MobilePhone" />
 
-                <label class=""><i class="fas fa-phone"></i> Work Phone</label>
+                <label class=""><i class="fas fa-phone fa-fw w3-margin-right"></i> Work Phone</label>
                 <input class=" w3-input" asp-for="UserDetail.UserContact.WorkPhone" />
 
-                <label class=""><i class="fas fa-phone"></i> Other Phone</label>
+                <label class=""><i class="fas fa-phone fa-fw w3-margin-right"></i> Other Phone</label>
                 <input class=" w3-input" asp-for="UserDetail.UserContact.OtherPhone" />
             </div>
 

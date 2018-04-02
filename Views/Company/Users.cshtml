@@ -14,8 +14,8 @@
         <thead>
             <tr>
                 <th>User Name</th>
-                <th>Profile</th>
-                <th>User Id</th>
+                <th>Role</th>
+                <th>e-Mail</th>
                 <th></th>
                 <th></th>
             </tr>
@@ -25,8 +25,8 @@
             {
                 <tr>
                     <td class="w3-center">@user.Name</td>
-                    <td></td>
-                    <td class="w3-center">@user.UserId</td>
+                    <td class="w3-center">@user.Profile.Role</td>
+                    <td class="w3-center">@user.UserContact.Email</td>
                     <td class="w3-center" style="width: 50px"><a class="js-delete" href="/CompanyUser/UserDetail/@user.Id" data-message-id="@user.Id"><i class="far fa-edit"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Edit User"></i></a></td>
                     <td class="w3-center" style="width: 50px"><a class="js-delete" href="javascript:void(0);" data-message-id="@user.Id"><i class="far fa-trash-alt"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Delete User"></i></a></td>
                 </tr>

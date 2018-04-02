@@ -4,8 +4,7 @@
     ViewData.AddActivePage(ManageNavPages.Index);
 }
 
-@Html.Partial("_StatusMessage", Model.StatusMessage)
-
+    @Html.Partial("_StatusMessage", Model.StatusMessage)
 
     <div class="w3-row-padding w3-margin-top">
 
@@ -29,7 +28,7 @@
                     <label asp-for="UserDetail.Company.Name" ></label>
                     <input asp-for="UserDetail.Company.Name" class=" w3-input" disabled=""/>
                 
-                    <label class=""><i class="fas fa-at"></i> Account e-mail <i class="fa fa-info-circle" data-toggle="popover" data-trigger="focus" data-content="Change your e-mail address under 'Contact Info'"></i> </label>
+                    <label class=""><i class="fas fa-at fa-fw w3-margin-right"></i> Account e-mail <i class="fa fa-info-circle" data-toggle="popover" data-trigger="focus" data-content="Change your e-mail address under 'Contact Info'"></i> </label>
                     @if (Model.IsEmailConfirmed)
                     {
                         <div class="input-group">
