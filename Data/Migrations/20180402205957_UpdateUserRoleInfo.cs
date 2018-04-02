@@ -26,11 +26,11 @@ namespace SBTCustomerManager.Data.Migrations
                 columns: table => new
                 {
                 Id = table.Column<int>(nullable: false, defaultValue: 0),
-                    RoleId = table.Column<string>(nullable: true)
+                RoleId = table.Column<string>(nullable: false,maxLength: 255)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoleTypes", x => x.Id);
+                    table.PrimaryKey("PK_RoleTypes", x => x.RoleId);
                 });
 
             migrationBuilder.CreateTable(
@@ -47,10 +47,10 @@ namespace SBTCustomerManager.Data.Migrations
                 });
 
             migrationBuilder.Sql(@"
-set identity_insert RoleTypes on
-insert into RoleTypes(id,Type) values(0,'Private')
-insert into RoleTypes (type) values('Public')            
-set identity_insert RoleTypes off
+set identity_insert Types on
+insert into Types(id,Type) values(0,'Private')       
+set identity_insert Types off
+insert into Types (type) values('Public')     
 ");
 
             migrationBuilder.AddForeignKey(
