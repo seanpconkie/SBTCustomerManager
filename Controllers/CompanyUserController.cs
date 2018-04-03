@@ -251,7 +251,7 @@ namespace SBTCustomerManager.Controllers
                 newRole.RoleId = role.Id;
                 newRole.Name = role.Name;
                 newRole.TypeId = _context.RoleTypes.SingleOrDefault(c => c.RoleId == role.Id).Id;
-                newRole.Type = _context.Types.SingleOrDefault(c => c.Id == newRole.TypeId);
+                newRole.Type = _context.RoleType.SingleOrDefault(c => c.Id == newRole.TypeId);
                 newRole.Description = _context.RoleDescriptions.SingleOrDefault(c => c.RoleId == newRole.RoleId).Description;
 
                 //if (activeRoles.IndexOf(new IdentityUserRole<string> {RoleId = newRole.RoleId}) == -1)
