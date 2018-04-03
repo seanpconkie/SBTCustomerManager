@@ -8,7 +8,7 @@ namespace SBTCustomerManager.Models.CompanyDataModel
         public long CompanyId { get; set; }
 
         [Display(Name = "Subscription Type")]
-        public int TypeId { get; set; }
+        public int SubscriptionTypeId { get; set; }
         public SubscriptionType SubscriptionType { get; set; }
 
         public DateTime? StartDate { get; set; }

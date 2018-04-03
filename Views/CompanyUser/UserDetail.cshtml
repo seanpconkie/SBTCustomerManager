@@ -36,6 +36,9 @@
 
                     <label asp-for="UserDetails.UserId" ></label>
                     <input value="@Model.UserDetails.UserId" class="w3-input" disabled=""/>
+
+                    <label asp-for="UserDetails.StartDate" ></label>
+                    <input asp-for="UserDetails.StartDate" class=" w3-input" disabled=""/>
                 
                     <input asp-for="UserDetails.UserId" class="w3-input" type="hidden"/>
                     <input asp-for="CompanyDetails.UserId" class="w3-input" type="hidden"/>

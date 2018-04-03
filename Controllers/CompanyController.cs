@@ -92,6 +92,29 @@ namespace SBTCustomerManager.Controllers
 
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Subscriptions()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            var userDetail = _context.UserDetails.SingleOrDefault(c => c.UserId == user.Id);
+
+            var viewModel = new CompanyViewModel
+            {
+                CompanyDetails = _context.CompanyDetails.SingleOrDefault(c => c.Id == userDetail.CompanyId),
+                CompanySubscriptions = _context.Subscriptions.Include(c => c.SubscriptionType).Where(c => c.CompanyId == userDetail.CompanyId).ToList()
+            };
+
+            viewModel.CompanyContact = _context.UserDetails.Include(c => c.UserContact).SingleOrDefault(c => c.UserId == viewModel.CompanyDetails.UserId);
+
+            return View(viewModel);
+
+        }
+
 
         [HttpGet]
         public IActionResult AddUser(string returnUrl = null)
@@ -157,6 +180,8 @@ namespace SBTCustomerManager.Controllers
                     newUser.Name = model.ForeName + ' ' + model.Surname;
                     newUser.Title = model.Title;
                     newUser.StartDate = DateTime.Now;
+                    newUser.EndDate = new DateTime(2070, 1, 1);
+
                     newUser.UserContactId = contact.Id;
                     newUser.CompanyId = companyId;
                     newUser.UserId = user.Id;

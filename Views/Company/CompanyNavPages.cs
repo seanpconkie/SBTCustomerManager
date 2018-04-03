@@ -15,9 +15,13 @@ namespace SBTCustomerManager.Views.Company
 
         public static string Users => "Users";
 
+        public static string Subscriptions => "Subscriptions";
+
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
 
         public static string UsersNavClass(ViewContext viewContext) => PageNavClass(viewContext, Users);
+
+        public static string SubscriptionsNavClass(ViewContext viewContext) => PageNavClass(viewContext, Subscriptions);
 
         public static string PageNavClass(ViewContext viewContext, string page)
         {

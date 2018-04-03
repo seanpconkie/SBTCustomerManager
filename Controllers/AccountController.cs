@@ -293,6 +293,7 @@ namespace SBTCustomerManager.Controllers
                     newUser.Name = model.ForeName + ' ' + model.Surname;
                     newUser.Title = model.Title;
                     newUser.StartDate = DateTime.Now;
+                    newUser.EndDate = new DateTime(2070, 1, 1);
                     newUser.UserContactId = contact.Id;
                     newUser.CompanyId = companyId;
                     newUser.UserId = user.Id;

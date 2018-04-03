@@ -1,0 +1,54 @@
+﻿@model SBTCustomerManager.Models.CompanyDataModel.CompanyViewModel
+@{
+    ViewData["Title"] = "Company Subscriptions";
+}
+
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+
+<div class="w3-container">
+    <div class="w3-bar w3-padding">
+        <div asp-validation-summary="All" class="text-danger w3-bar-item"></div>
+    </div>
+    <table id="subs" class="display">
+        <thead>
+            <tr>
+                <th>Subscription Type</th>
+                <th>Subscription Start</th>
+                <th>Cost</th>
+                <th>Billing Frequency</th>
+                <th>Number of Users</th>
+                <th>Unit Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var subscription in Model.CompanySubscriptions)
+            {
+                <tr>
+                    <td><a href="@subscription.Url">@subscription.SubscriptionType.Type</a></td>
+                    <td class="w3-center">@subscription.StartDate</td>
+                    <td class="w3-center">£@subscription.Cost</td>
+                    <td class="w3-center">@subscription.BillingFrequency</td>
+                    <td class="w3-center">@subscription.Users</td>
+                    <td class="w3-center">£@subscription.UnitPrice</td>
+                </tr>
+            }
+        </tbody>
+    </table>    
+</div><br>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#subs").DataTable();
+    
+        });
+    </script>
+    <script>
+        $("[data-toggle='popover']").popover({ trigger: "hover" });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>  
+}

@@ -19,7 +19,10 @@ namespace SBTCustomerManager.Models.UserDataModels
         [Required]
         public string Title { get; set; }
 
+        [Display(Name = "Start Date")]
         public DateTime? StartDate { get; set; }
+
+        [Display(Name = "End Date")]
         public DateTime? EndDate { get; set; }
 
         public long Id { get; set; }

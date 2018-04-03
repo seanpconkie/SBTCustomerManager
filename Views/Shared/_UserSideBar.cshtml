@@ -7,8 +7,11 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage" class="w3-container w3-padding w3-button w3-block w3-border-bottom w3-left-align"><i class="fas fa-user-circle fa-fw w3-margin-right"></i>Account Details</a>
-    <a asp-area="" asp-controller="Messages" asp-action="Messages" title="Messages" class="w3-container w3-padding w3-button w3-block w3-border-bottom w3-left-align"><i class="fas fa-envelope fa-fw w3-margin-right"></i>Messages</a>
     <a asp-area="" asp-controller="Company" asp-action="Index" title="Company" class="w3-container w3-padding w3-button w3-block w3-border-bottom w3-left-align"><i class="fas fa-building fa-fw w3-margin-right"></i>Company Details</a>
+    <a asp-area="" asp-controller="Customers" asp-action="Index" title="Customers" class="w3-container w3-padding w3-button w3-block w3-border-bottom w3-left-align"><i class="fas fa-users fa-fw w3-margin-right"></i>Customers</a>
+    <a asp-area="" asp-controller="Roles" asp-action="Index" title="Roles" class="w3-container w3-padding w3-button w3-block w3-border-bottom w3-left-align"><i class="fas fa-user-secret  fa-fw w3-margin-right"></i>Manage Roles</a>
+    <a asp-area="" asp-controller="Subscriptions" asp-action="Index" title="Subscriptions" class="w3-container w3-padding w3-button w3-block w3-border-bottom w3-left-align"><i class="fas fa-dollar-sign fa-fw w3-margin-right"></i>Manage Subscriptions</a>
+    <a asp-area="" asp-controller="Messages" asp-action="Messages" title="Messages" class="w3-container w3-padding w3-button w3-block w3-border-bottom w3-left-align"><i class="fas fa-envelope fa-fw w3-margin-right"></i>Messages</a>
 }
 else
 {

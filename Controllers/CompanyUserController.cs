@@ -23,7 +23,6 @@ namespace SBTCustomerManager.Controllers
 {
 
     [Authorize]
-    [Route("[controller]/[action]")]
     public class CompanyUserController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
