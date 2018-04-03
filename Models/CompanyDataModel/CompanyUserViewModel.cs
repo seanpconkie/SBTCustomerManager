@@ -17,9 +17,7 @@ namespace SBTCustomerManager.Models.CompanyDataModel
         public List<SelectListItem> UserRoles { get; set; }
         [Display(Name = "Company Contact")]
         public bool IsCompanyContact { get; set; }
-        //public List<IdentityRole> RoleList { get; set; }
-        //public List<IdentityUserRole<string>> ActiveRoles { get; set; }
-        public List<RoleDetail> RoleDetails { get; set; }
+        public List<RoleDetail> RoleList { get; set; }
         #endregion
 
     }

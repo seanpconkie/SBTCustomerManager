@@ -5,7 +5,17 @@
 }
 
 <div class="w3-bar">
-    <div class="@CompanyNavPages.IndexNavClass(ViewContext) w3-bar-item w3-button"><a asp-action="Index"><i class="fas fa-building w3-margin-right"></i>Company Details</a></div>
-    <div class="@CompanyNavPages.UsersNavClass(ViewContext) w3-bar-item w3-button"><a asp-action="Users"><i class="fas fa-users w3-margin-right"></i>Company Users</a></div>
+    <div class="@CompanyNavPages.IndexNavClass(ViewContext) w3-bar-item w3-button"><a asp-action="Index" onclick="document.getElementById('id01').style.display='block'"><i class="fas fa-building w3-margin-right"></i>Company Details</a></div>
+    <div class="@CompanyNavPages.UsersNavClass(ViewContext) w3-bar-item w3-button"><a asp-action="Users" onclick="document.getElementById('id01').style.display='block'"><i class="fas fa-users w3-margin-right"></i>Company Users</a></div>
 </div>
 
+
+    <!-- Modal that pops up when you click on to add or delete role -->
+    <div id="id01" class="w3-modal" style="z-index:4">
+        <div class="w3-modal-content w3-animate-zoom" style="width: 400px">
+            <div class="w3-container w3-padding-large">
+                <div class="w3-center w3-padding-large"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></div>
+                <h2 class="w3-center">Please wait....</h2>
+            </div>
+        </div>    
+    </div>
