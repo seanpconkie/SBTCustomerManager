@@ -5,6 +5,9 @@
 
 @Html.Partial("_StatusMessage", Model.StatusMessage)
 <div class="w3-container">
+    <div class="w3-bar w3-padding">
+        <div asp-validation-summary="All" class="text-danger w3-bar-item"></div>
+    </div>
     <table id="messages" class="display">
         <thead>
             <tr>

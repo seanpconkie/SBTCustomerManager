@@ -1,5 +1,5 @@
 ﻿using System;
-namespace SBTCustomerManager.Models.CompanyDataModel
+namespace SBTCustomerManager.Models.SubscriptionViewModels
 {
     public class SubscriptionType
     {

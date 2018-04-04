@@ -1,0 +1,131 @@
+﻿@model SBTCustomerManager.Models.SubscriptionViewModels.SubscriptionViewModel
+@{
+    ViewData["Title"] = "Manage Subscriptions";
+}
+
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+
+<div class="w3-container">
+    <div class="w3-bar w3-padding">
+        <div asp-validation-summary="All" class="text-danger w3-bar-item"></div>
+        <a href="javascript:void(0);" class="w3-bar-item w3-button accordian1 w3-right" data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Add New Subscription Type" onclick="addNew()"><i class="fas fa-plus"></i></a>
+    </div>
+    <table id="types" class="display">
+        <thead>
+            <tr>
+                <th>Subscription Type</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var type in Model.Types)
+            {
+                <tr>
+                    <td>@type.Type</td>
+                    <td class="w3-center" style="width: 50px"><a class="js-delete @type.Type @type.Id" href="javascript:void(0);" data-type-id="@type.Id" onclick="editType(this)" ><i class="far fa-edit"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Edit Type"></i></a></td>
+                    <td class="w3-center" style="width: 50px"><a class="js-delete" href="javascript:void(0);" data-type-id="@type.Id"><i class="far fa-trash-alt"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Delete Type"></i></a></td>
+                </tr>
+            }
+        </tbody>
+    </table>    
+</div><br>
+
+
+<!-- Modal that pops up when you click on "New Message" -->
+<div id="id01" class="w3-modal" style="z-index:4">
+    <div class="w3-modal-content w3-animate-zoom" style="width:400px">
+        <div class="w3-container w3-padding">
+            <span onclick="document.getElementById('id01').style.display='none'"
+            class="w3-button w3-right"><i class="fas fa-times"></i></span>
+            <div class="w3-container">
+                <form method="post">
+                    <div id="form-contents">
+                    </div>
+                    <div class="form-group w3-padding-large">
+                        <label asp-for="SubscriptionType.Type" ></label>
+                        <input id="id-input" asp-for="SubscriptionType.Id" class=" w3-input" type="hidden"/>
+                        <input id="type-input" asp-for="SubscriptionType.Type" class=" w3-input" placeholder="New Type"/>
+                    </div>
+                    <button type="submit" class="w3-button accordian1 w3-block w3-round">Submit</button>
+                    <br>
+                </form>
+            </div>
+        </div>
+    </div>    
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#types").DataTable();
+    
+        });
+    </script>
+    <script>
+        $("[data-toggle='popover']").popover({ trigger: "hover" });
+    </script>
+    <script>
+        function addNew() {
+            var formContainer = document.getElementById("form-contents");
+            var typeInput = document.getElementById("type-input");
+            var idInput = document.getElementById("id-input");
+
+            //remove children
+            while (formContainer.hasChildNodes()) {
+                formContainer.removeChild(formContainer.firstChild);
+            }
+
+            //add new children
+            var newHeader = document.createElement("h4");
+            newHeader.textContent = "Add new Subscription Type";
+            newHeader.className = "w3-opacity"
+
+            var newHr = document.createElement("hr");
+
+            var formGroup = document.createElement("div");
+            formGroup.classList = "form-group w3-padding-large"
+
+            idInput.value = 0;
+            typeInput.value = "";
+            typeInput.placeholder = "New Type";
+
+            formContainer.appendChild(newHeader);
+            formContainer.appendChild(newHr);
+            document.getElementById('id01').style.display='block'
+
+        }
+        function editType(btn) {
+            var formContainer = document.getElementById("form-contents");
+            var typeInput = document.getElementById("type-input");
+            var idInput = document.getElementById("id-input");
+
+            //remove children
+            while (formContainer.hasChildNodes()) {
+                formContainer.removeChild(formContainer.firstChild);
+            }
+
+            //add new children
+            var newHeader = document.createElement("h4");
+            newHeader.textContent = "Edit Subscription Type";
+            newHeader.className = "w3-opacity"
+
+            var newHr = document.createElement("hr");
+
+            var formGroup = document.createElement("div");
+            formGroup.classList = "form-group w3-padding-large"
+
+            idInput.value = btn.classList.item(2);
+            typeInput.value = btn.classList.item(1);
+            typeInput.placeholder = "Edit Type";
+
+            formContainer.appendChild(newHeader);
+            formContainer.appendChild(newHr);
+            document.getElementById('id01').style.display='block'
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>  
+}

@@ -32,5 +32,9 @@
     <Folder Include="Models\CompanyDataModel\" />
     <Folder Include="Views\Company\" />
     <Folder Include="Views\CompanyUser\" />
+    <Folder Include="Views\Customer\" />
+    <Folder Include="Views\Role\" />
+    <Folder Include="Views\Subscription\" />
+    <Folder Include="Models\SubscriptionViewModels\" />
   </ItemGroup>
 </Project>
