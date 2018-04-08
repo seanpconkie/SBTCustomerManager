@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-namespace SBTCustomerManager.Models.UserDataModels
+namespace SBTCustomerManager.Models.RoleViewModels
 {
     public class RoleTypes
     {

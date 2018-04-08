@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SBTCustomerManager.Models.UserDataModels;
 using SBTCustomerManager.Models.CompanyDataModel;
 using SBTCustomerManager.Models.SubscriptionViewModels;
+using SBTCustomerManager.Models.RoleViewModels;
 using SBTCustomerManager.Models;
 
 namespace SBTCustomerManager.Data

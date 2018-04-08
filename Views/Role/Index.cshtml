@@ -1,10 +1,72 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
+﻿@model SBTCustomerManager.Models.RoleViewModels.RoleViewModel
+@{
+    ViewData["Title"] = "Manage User Roles";
+}
 
-</body>
-</html>
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+
+<div class="w3-container">
+    <div class="w3-bar w3-padding">
+        <div asp-validation-summary="All" class="text-danger w3-bar-item"></div>
+        <a asp-area="" asp-controller="Role" asp-action="Add" class="w3-bar-item w3-button accordian1 w3-right" data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Add New Role"><i class="fas fa-plus"></i></a>
+    </div>
+    <table id="roles" class="display">
+        <thead>
+            <tr>
+                <th>Role Name</th>
+                <th>Role Type</th>
+                <th>Role Description</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var role in Model.Roles)
+            {
+                <tr>
+                    <td>@role.Name</td>
+                    <td class="w3-center">@role.Type.Type</td>
+                    <td>@role.Description</td>
+                    <td class="w3-center" style="width: 50px"><a href="/Role/Edit/@role.RoleId"><i class="far fa-edit"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Edit Role"></i></a></td>
+                    <td class="w3-center" style="width: 50px"><a href="/Role/Delete/@role.RoleId" onclick="deleteRole(this)"><i class="far fa-trash-alt"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Delete Role"></i></a></td>
+                </tr>
+            }
+        </tbody>
+    </table>    
+</div><br>
+
+    <!-- Modal that pops up when you click on to add or delete role -->
+    <div id="id01" class="w3-modal" style="z-index:4">
+        <div class="w3-modal-content w3-animate-zoom" style="width: 400px">
+            <div class="w3-container w3-padding-large">
+                <div class="w3-center w3-padding-large"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></div>
+                <h2 class="w3-center">Please wait....</h2>
+            </div>
+        </div>    
+    </div>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#roles").DataTable();
+    
+        });
+    </script>
+    <script>
+        $("[data-toggle='popover']").popover({ trigger: "hover" });
+    </script>
+    <script>
+        function deleteRole(link) {
+            var destination = link.href;
+            if (confirm("Deleting this Role will remove it from all users currently assigned.\nAre you sure you would like to continue?")) {
+                document.getElementById('id01').style.display='block';
+                window.location.href=destination;
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>  
+}

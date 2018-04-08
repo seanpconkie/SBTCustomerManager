@@ -14,6 +14,7 @@ using SBTCustomerManager.Data;
 using SBTCustomerManager.Models;
 using SBTCustomerManager.Models.AccountViewModels;
 using SBTCustomerManager.Models.CompanyDataModel;
+using SBTCustomerManager.Models.RoleViewModels;
 using SBTCustomerManager.Models.UserDataModels;
 using SBTCustomerManager.Services;
 
@@ -147,7 +148,7 @@ namespace SBTCustomerManager.Controllers
             var setResult = await _userManager.RemoveFromRoleAsync(user, _context.Roles.SingleOrDefault(c => c.Id == roleId).Name);
             if (!setResult.Succeeded)
             {
-                throw new ApplicationException($"Unexpected error occurred role '{roleId}' from user with ID '{user.Id}'.");
+                throw new ApplicationException($"Unexpected error occurred while removing role '{roleId}' from user with ID '{user.Id}'.");
             }
 
             return RedirectToAction("UserProfile", new { id = _context.UserDetails.SingleOrDefault(c => c.UserId == userId).Id });
@@ -167,7 +168,7 @@ namespace SBTCustomerManager.Controllers
             var setResult = await _userManager.AddToRoleAsync(user, _context.Roles.SingleOrDefault(c => c.Id == roleId).Name);
             if (!setResult.Succeeded)
             {
-                throw new ApplicationException($"Unexpected error occurred role '{roleId}' from user with ID '{user.Id}'.");
+                throw new ApplicationException($"Unexpected error occurred adding role '{roleId}' from user with ID '{user.Id}'.");
             }
 
             StatusMessage = "User profile has been updated";
@@ -240,7 +241,6 @@ namespace SBTCustomerManager.Controllers
         {
             List<RoleDetail> outputList = new List<RoleDetail>();
             var roleList = _context.Roles.ToList();
-            //var activeRoles = _context.UserRoles.Where(c => c.UserId == userId).ToList();
 
             foreach (var role in roleList)
             {
@@ -253,7 +253,6 @@ namespace SBTCustomerManager.Controllers
                 newRole.Type = _context.RoleType.SingleOrDefault(c => c.Id == newRole.TypeId);
                 newRole.Description = _context.RoleDescriptions.SingleOrDefault(c => c.RoleId == newRole.RoleId).Description;
 
-                //if (activeRoles.IndexOf(new IdentityUserRole<string> {RoleId = newRole.RoleId}) == -1)
                 if (activeRoles.Count == 0)
                 {
                     newRole.IsSelected = false;

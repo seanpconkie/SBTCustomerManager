@@ -36,5 +36,6 @@
     <Folder Include="Views\Role\" />
     <Folder Include="Views\Subscription\" />
     <Folder Include="Models\SubscriptionViewModels\" />
+    <Folder Include="Models\RoleViewModels\" />
   </ItemGroup>
 </Project>

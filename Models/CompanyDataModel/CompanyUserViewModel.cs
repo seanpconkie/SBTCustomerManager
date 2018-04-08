@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using SBTCustomerManager.Models.CompanyDataModel;
 using SBTCustomerManager.Models.UserDataModels;
+using SBTCustomerManager.Models.RoleViewModels;
 
 namespace SBTCustomerManager.Models.CompanyDataModel
 {
