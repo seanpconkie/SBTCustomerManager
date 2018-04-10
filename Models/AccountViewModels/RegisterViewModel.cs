@@ -73,6 +73,8 @@ namespace SBTCustomerManager.Models.AccountViewModels
         [StringLength(100)]
         [Display(Name = "Company name")]
         public string CompanyName { get; set; }
+
+        public List<SelectListItem> Titles { get; set; }  
         #endregion
 
 

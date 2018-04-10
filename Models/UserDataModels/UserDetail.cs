@@ -38,7 +38,7 @@ namespace SBTCustomerManager.Models.UserDataModels
         [Display(Name = "Company Details")]
         public long CompanyId { get; set; }
 
-        [Display(Name = "Role")]
+        [Display(Name = "Position")]
         public long ProfileId { get; set; }
         public Profile Profile { get; set; }
 

@@ -11,6 +11,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" PrivateAssets="All" />
     <PackageReference Include="Sendgrid" Version="9.9.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,5 +39,10 @@
     <Folder Include="Views\Subscription\" />
     <Folder Include="Models\SubscriptionViewModels\" />
     <Folder Include="Models\RoleViewModels\" />
+    <Folder Include="Views\SiteSettings\" />
+    <Folder Include="Models\SiteSettingsViewModels\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Views\SiteSettings\Index.cshtml" />
   </ItemGroup>
 </Project>

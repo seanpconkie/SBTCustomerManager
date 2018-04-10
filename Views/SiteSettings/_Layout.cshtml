@@ -1,0 +1,81 @@
+﻿@{ 
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+    <h2>
+        Site Settings
+        <a class="w3-bar-item w3-button w3-hover-black w3-hide-medium w3-hide-large w3-right" href="javascript:void(0);" onclick="toggleFunction()" title="Toggle Navigation Menu">
+            <i class="fa fa-bars"></i>
+        </a>
+    </h2>
+    <div class="w3-row-padding w3-margin-top">
+        
+        <div class="w3-hide" id="showBar">
+            <i class="fas fa-eye w3-button" onclick="toggleSideBar()"></i> 
+        </div>
+        <div id="sideBar" class="w3-quarter w3-hide-small w3-show">
+            <div class="w3-container" style="min-height:460px">
+                <i id="hideBar" class="fas fa-eye-slash w3-button w3-block w3-show" onclick="toggleSideBar()"></i>
+                @Html.Partial("_UserSideBar")
+            </div>
+        </div>
+        <!-- small screen navbar -->
+        <div>
+            <div id="navDemo" class="w3-bar-block w3-hide-large w3-hide-medium w3-hide">
+                @Html.Partial("_UserSideBar")
+            </div>   
+        </div>
+        
+        <div id="pageContent" class="w3-threequarter">
+            @RenderBody()
+        </div>
+    </div>
+    
+
+
+
+
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+
+    <script>
+        // Used to toggle the menu on small screens when clicking on the menu button
+        function toggleFunction() {
+            var x = document.getElementById("navDemo");
+            if (x.className.indexOf("w3-show") == -1) {
+                x.className += " w3-show";
+            } else {
+                x.className = x.className.replace(" w3-show", "");
+            }
+        }
+
+        function toggleSideBar() {
+           var bar = document.getElementById("sideBar");
+           var hide = document.getElementById("hideBar");
+           var show = document.getElementById("showBar");
+           var page = document.getElementById("pageContent");
+    
+           if (bar.className.indexOf("w3-show") == -1) {
+                bar.className = "w3-quarter w3-hide-small w3-show";
+    
+                hide.className = hide.className.replace("w3-hide", "w3-show");
+    
+                show.className = show.className.replace("w3-show", "w3-hide");
+
+                page.className += " w3-threequarter";
+    
+            }
+            else {
+                bar.className = bar.className.replace("w3-show", "w3-hide");
+                hide.className = hide.className.replace("w3-show", "w3-hide");
+    
+                show.className = show.className.replace("w3-hide", "w3-show");
+
+                page.className = page.className.replace("w3-threequarter", "");
+            }
+            
+        }
+
+    </script>
+
+}        

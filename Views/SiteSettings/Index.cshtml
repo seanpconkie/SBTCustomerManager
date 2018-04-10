@@ -1,0 +1,212 @@
+﻿@model SBTCustomerManager.Models.SiteSettingsViewModels.SiteSettingsViewModel
+@{
+    ViewData["Title"] = "Manage Site Settings";
+}
+
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+
+<div class="w3-container">
+    <div class="w3-bar w3-padding">
+        <div asp-validation-summary="All" class="text-danger w3-bar-item"></div>
+    </div>
+
+    <div class="w3-row-padding">
+        <div class="w3-third">
+            <h4>User Title<i class="fas fa-info-circle w3-margin-left w3-medium" data-toggle="popover" data-trigger="focus" data-content="List of prefixes for user name."></i></h4>
+            <hr>
+            <select size="6" class="w3-input" id="Title"> 
+                @foreach (var item in Model.Titles)
+                {
+                    <option value="@item.Id">@item.Value</option>
+                }
+            </select>
+            <div class="w3-bar">
+                <i class="w3-bar-item w3-button w3-right w3-border-bottom fa-fw fas fa-plus" onclick="addUserTitle()"></i>
+                <i class="w3-bar-item w3-button w3-right w3-border-bottom fa-fw fas fa-minus" onclick="deleteItem('Title')"></i>
+                <i class="w3-bar-item w3-button w3-right w3-border-bottom fa-fw fas fa-edit"></i>
+            </div>
+        </div>
+        <div class="w3-third">
+            <h4>User Position<i class="fas fa-info-circle w3-margin-left w3-medium" data-toggle="popover" data-trigger="focus" data-content="User's position in company."></i></h4>
+            <hr>
+            <select size="6" class="w3-input" id="Profile"> 
+                @foreach (var item in Model.Profiles)
+                {
+                    <option value="@item.Id">@item.Role</option>
+                }
+            </select>
+            <div class="w3-bar">
+                <i class="w3-bar-item w3-button w3-right w3-border-bottom fa-fw fas fa-plus" onclick="addProfile()"></i>
+                <i class="w3-bar-item w3-button w3-right w3-border-bottom fa-fw fas fa-minus" onclick="deleteItem('Profile')"></i>
+                <i class="w3-bar-item w3-button w3-right w3-border-bottom fa-fw fas fa-edit"></i>
+            </div>
+        </div>
+        <div class="w3-third">
+            <h4>User Role Type<i class="fas fa-info-circle w3-margin-left w3-medium" data-toggle="popover" data-trigger="focus" data-content="Type of user role."></i></h4>
+            <hr>
+            <select size="6" class="w3-input" id="RoleType"> 
+                @foreach (var item in Model.RoleTypes)
+                {
+                    <option value="@item.Id">@item.Type</option>
+                }
+            </select>
+            <div class="w3-bar">
+                <i class="w3-bar-item w3-button w3-right w3-border-bottom fa-fw fas fa-plus" onclick="addUserRole()"></i>
+                <i class="w3-bar-item w3-button w3-right w3-border-bottom fa-fw fas fa-minus" onclick="deleteItem('RoleType')"></i>
+                <i class="w3-bar-item w3-button w3-right w3-border-bottom fa-fw fas fa-edit"></i>
+            </div>
+        </div>
+    </div>    
+      
+</div><br>
+
+    <!-- Modal for loading -->
+    <div id="id01" class="w3-modal" style="z-index:4">
+        <div class="w3-modal-content w3-animate-zoom" style="width: 400px">
+            <div class="w3-container w3-padding-large">
+                <div class="w3-center w3-padding-large"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></div>
+                <h2 class="w3-center">Please wait....</h2>
+            </div>
+        </div>    
+    </div>
+
+    <!-- Modal for add new -->
+    <div id="id02" class="w3-modal" style="z-index:4">
+        <div class="w3-modal-content w3-animate-zoom" style="width:400px">
+            <div class="w3-container w3-padding">
+                <span onclick="document.getElementById('id02').style.display='none'"
+                class="w3-button w3-right"><i class="fas fa-times"></i></span>
+                <div class="w3-container">
+                    <form method="post">
+                        <div id="form-contents">
+                        </div>
+                        <div class="form-group w3-padding-large">
+                            <label id="label-input"></label>
+                            <input id="id-input" asp-for="UpdateId" class=" w3-input" type="hidden"/>
+                            <input id="type-input" asp-for="UpdateType" class=" w3-input" type="hidden"/>
+                            <input id="value-input" asp-for="UpdateValue" class=" w3-input" placeholder="New Type"/>
+                        </div>
+                        <button type="submit" class="w3-button accordian1 w3-block w3-round">Submit</button>
+                        <br>
+                    </form>
+                </div>
+            </div>
+        </div>    
+    </div>
+
+@section scripts
+{
+
+    <script>
+        function deleteItem(listId) {
+            var selectList = document.getElementById(listId);
+            var itemID = selectList.options[selectList.selectedIndex].value;
+            var itemValue = selectList.options[selectList.selectedIndex].textContent;
+            var message = "Are you sure you want to delete '" + itemValue + "'?"
+            
+            if (confirm(message)) {
+                document.getElementById('id01').style.display='block';
+                window.location.href = "/SiteSettings/Delete?id=" + itemID + "&updateType=" + listId;
+            }
+            
+        }
+        function addProfile() {
+            var formContainer = document.getElementById("form-contents");
+            var typeInput = document.getElementById("type-input");
+            var valueInput = document.getElementById("value-input");
+            var idInput = document.getElementById("id-input");
+            var labelInput = document.getElementById("label-input");
+
+            //remove children
+            while (formContainer.hasChildNodes()) {
+                formContainer.removeChild(formContainer.firstChild);
+            }
+
+            //add new children
+            var newHeader = document.createElement("h4");
+            newHeader.textContent = "Add new User Position";
+            newHeader.className = "w3-opacity"
+
+            var newHr = document.createElement("hr");
+
+            idInput.value = 0;
+            typeInput.value = "Profile"
+            valueInput.value = "";
+            valueInput.placeholder = "New Position";
+            labelInput.textContent = "User Position";
+
+            formContainer.appendChild(newHeader);
+            formContainer.appendChild(newHr);
+            document.getElementById('id02').style.display='block'
+
+        }
+    
+        function addUserTitle() {
+            var formContainer = document.getElementById("form-contents");
+            var typeInput = document.getElementById("type-input");
+            var valueInput = document.getElementById("value-input");
+            var idInput = document.getElementById("id-input");
+            var labelInput = document.getElementById("label-input");
+
+            //remove children
+            while (formContainer.hasChildNodes()) {
+                formContainer.removeChild(formContainer.firstChild);
+            }
+
+            //add new children
+            var newHeader = document.createElement("h4");
+            newHeader.textContent = "Add new User Title";
+            newHeader.className = "w3-opacity"
+
+            var newHr = document.createElement("hr");
+
+            idInput.value = 0;
+            typeInput.value = "Title"
+            valueInput.value = "";
+            valueInput.placeholder = "New Title";
+            labelInput.textContent = "Title";
+
+            formContainer.appendChild(newHeader);
+            formContainer.appendChild(newHr);
+            document.getElementById('id02').style.display='block'
+
+        }
+    
+        function addUserRole() {
+            var formContainer = document.getElementById("form-contents");
+            var typeInput = document.getElementById("type-input");
+            var valueInput = document.getElementById("value-input");
+            var idInput = document.getElementById("id-input");
+            var labelInput = document.getElementById("label-input");
+
+            //remove children
+            while (formContainer.hasChildNodes()) {
+                formContainer.removeChild(formContainer.firstChild);
+            }
+
+            //add new children
+            var newHeader = document.createElement("h4");
+            newHeader.textContent = "Add new Role Type";
+            newHeader.className = "w3-opacity"
+
+            var newHr = document.createElement("hr");
+
+            idInput.value = 0;
+            typeInput.value = "RoleType"
+            valueInput.value = "";
+            valueInput.placeholder = "New Role Type";
+            labelInput.textContent = "Role Type";
+
+            formContainer.appendChild(newHeader);
+            formContainer.appendChild(newHr);
+            document.getElementById('id02').style.display='block'
+
+        }
+    </script>
+    <script>
+        $("[data-toggle='popover']").popover({ trigger: "hover" });
+    </script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>  
+}

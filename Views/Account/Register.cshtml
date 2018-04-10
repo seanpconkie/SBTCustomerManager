@@ -20,18 +20,7 @@
                 <hr />
                 <div class="form-group">
                     <label asp-for="Title"></label>
-                    @Html.DropDownListFor(m => m.Title, 
-                    new List<SelectListItem>
-                    {
-                        new SelectListItem() { Text = "Dr", Value = "Dr" },
-                        new SelectListItem() { Text = "Miss", Value = "Miss" },
-                        new SelectListItem() { Text = "Mr", Value = "Mr" },
-                        new SelectListItem() { Text = "Mrs", Value = "Mrs" },
-                        new SelectListItem() { Text = "Ms", Value = "Ms" },
-                        new SelectListItem() { Text = "Other", Value = string.Empty }
-                    }
-
-                    ,"Select Title", new {@class = "w3-input", required=""})
+                    @Html.DropDownListFor(m => m.Title,Model.Titles,"Select Title", new {@class = "w3-input", required=""})
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
                 <br>

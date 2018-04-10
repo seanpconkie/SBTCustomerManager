@@ -237,10 +237,12 @@ namespace SBTCustomerManager.Controllers
 
         }
         [NonAction]
-        public List<RoleDetail> SetRoleList(string userId)
+        public async Task<List<RoleDetail>> SetRoleList(string userId)
         {
+            var user = await _userManager.GetUserAsync(User);
+            var userDetail = _context.UserDetails.SingleOrDefault(x => x.UserId == user.Id);
             List<RoleDetail> outputList = new List<RoleDetail>();
-            var roleList = _context.Roles.ToList();
+            var roleList = _context.Roles.OrderBy(x => x.Name).ToList();
 
             foreach (var role in roleList)
             {
@@ -252,6 +254,11 @@ namespace SBTCustomerManager.Controllers
                 newRole.TypeId = _context.RoleTypes.SingleOrDefault(c => c.RoleId == role.Id).Id;
                 newRole.Type = _context.RoleType.SingleOrDefault(c => c.Id == newRole.TypeId);
                 newRole.Description = _context.RoleDescriptions.SingleOrDefault(c => c.RoleId == newRole.RoleId).Description;
+
+                if (newRole.TypeId == 0 && userDetail.CompanyId == 0)
+                {
+                    break;
+                }
 
                 if (activeRoles.Count == 0)
                 {

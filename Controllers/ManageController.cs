@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SBTCustomerManager.Data;
@@ -60,6 +61,14 @@ namespace SBTCustomerManager.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
+            List<SelectListItem> titles = new List<SelectListItem>();
+            var resultList = _context.Titles.Where(c => c.Id > 0).OrderBy(x => x.Value).ToList();
+
+            foreach (var item in resultList)
+            {   
+                titles.Add(new SelectListItem { Value = item.Value, Text = item.Value });
+            }
+
             var model = new IndexViewModel
             {
                 Username = user.UserName,
@@ -67,7 +76,8 @@ namespace SBTCustomerManager.Controllers
                 PhoneNumber = user.PhoneNumber,
                 IsEmailConfirmed = user.EmailConfirmed,
                 StatusMessage = StatusMessage,
-                UserDetail = _context.UserDetails.Include(c => c.UserContact).Include(u => u.Company).SingleOrDefault(c => c.UserId == user.Id)
+                UserDetail = _context.UserDetails.Include(c => c.UserContact).Include(u => u.Company).SingleOrDefault(c => c.UserId == user.Id),
+                Titles = titles
             };
 
             return View(model);

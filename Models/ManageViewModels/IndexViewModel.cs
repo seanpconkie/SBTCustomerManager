@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SBTCustomerManager.Models;
 using SBTCustomerManager.Models.UserDataModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace SBTCustomerManager.Models.ManageViewModels
 {
@@ -25,6 +26,9 @@ namespace SBTCustomerManager.Models.ManageViewModels
         public string StatusMessage { get; set; }
 
         public UserDetail UserDetail { get; set; }
+
+        public List<SelectListItem> Titles { get; set; }  
+
         public string Title
         {
             get

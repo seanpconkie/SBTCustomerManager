@@ -2,16 +2,19 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SBTCustomerManager.Data;
 using SBTCustomerManager.Models;
 using SBTCustomerManager.Models.AccountViewModels;
 using SBTCustomerManager.Models.CompanyDataModel;
+using SBTCustomerManager.Models.RoleViewModels;
 using SBTCustomerManager.Models.UserDataModels;
 using SBTCustomerManager.Services;
 
@@ -68,6 +71,10 @@ namespace SBTCustomerManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
+            if (returnUrl == null)
+            {
+                returnUrl = "/Manage/Index";
+            }
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
@@ -223,7 +230,19 @@ namespace SBTCustomerManager.Controllers
         {
             ViewData["ReturnUrl"] = returnUrl;
 
-            return View();
+            var viewModel = new RegisterViewModel();
+
+            List<SelectListItem> titles = new List<SelectListItem>();
+            var resultList = _context.Titles.Where(c => c.Id > 0).OrderBy(x => x.Value).ToList();
+
+            foreach (var item in resultList)
+            {
+                titles.Add(new SelectListItem { Value = item.Value, Text = item.Value });
+            }
+
+            viewModel.Titles = titles;
+
+            return View(viewModel);
         }
 
         [HttpPost]

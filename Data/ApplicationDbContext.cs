@@ -20,6 +20,7 @@ namespace SBTCustomerManager.Data
         public DbSet<RoleDescription> RoleDescriptions { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<SubscriptionType> SubscriptionTypes { get; set; }
+        public DbSet<Title> Titles { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
