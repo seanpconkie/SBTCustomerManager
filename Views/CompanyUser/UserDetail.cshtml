@@ -31,7 +31,9 @@
                     <div class="form-group">
                         <label asp-for="UserDetails.Profile.Role"></label>
                         <span asp-validation-for="UserDetails.Profile.Id" class="text-danger"></span>
-                        @Html.DropDownListFor(m => m.UserDetails.Profile.Id,Model.UserRoles,"Select Role", new {@class = "w3-input", required=""})
+                        <div class="custom-select" style="width:400px;">
+                            @Html.DropDownListFor(m => m.UserDetails.Profile.Id,Model.UserRoles,"Select Role", new {@class = "w3-input", required=""})
+                        </div>
                     </div>
 
                     <label asp-for="UserDetails.UserId" ></label>
@@ -48,10 +50,13 @@
 
             <div class="w3-half">
                 <div class="w3-container">
-                    <br>
-                    <div class="w3-row">
-                        <div class="w3-half"><label>Set as Company Contact</label></div>
-                        <div class="w3-half"><input asp-for="IsCompanyContact" class="w3-input" type="checkbox"/></div>
+                    <div class="form-group">
+                        <p><label asp-for="IsCompanyContact"></label></p>
+                        <!-- Rounded switch -->
+                        <label class="switch">
+                            <input type="checkbox" asp-for="IsCompanyContact">
+                            <span class="slider round"></span>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -73,4 +78,7 @@
     <script>
         $("[data-toggle='popover']").popover({ trigger: "hover" });
     </script>
+    <script src="https://s3.amazonaws.com/sbt-solutions.co.uk/customSelect.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="https://s3.amazonaws.com/sbt-solutions.co.uk/customSelect.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="https://s3.amazonaws.com/sbt-solutions.co.uk/sliderCheckBox.css"/>
 }

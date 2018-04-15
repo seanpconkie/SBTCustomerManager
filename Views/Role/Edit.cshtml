@@ -26,7 +26,9 @@
                     <div class="form-group">
                         <label asp-for="Role.Type.Type"></label>
                         <span asp-validation-for="Role.Type.Type" class="text-danger"></span>
-                        @Html.DropDownListFor(m => m.Role.Type.Id,Model.RoleTypes,"Select Type", new {@class = "w3-input", required=""})
+                        <div class="custom-select" style="width:400px;">
+                            @Html.DropDownListFor(m => m.Role.Type.Id,Model.RoleTypes,"Select Type", new {@class = "w3-input", required=""})
+                        </div>
                     </div>
                 </div> 
             </div>
@@ -56,4 +58,6 @@
     <script>
         $("[data-toggle='popover']").popover({ trigger: "hover" });
     </script>
+    <script src="https://s3.amazonaws.com/sbt-solutions.co.uk/customSelect.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="https://s3.amazonaws.com/sbt-solutions.co.uk/customSelect.css"/>
 }

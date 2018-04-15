@@ -8,7 +8,7 @@
 <div class="w3-container">
     <div class="w3-bar w3-padding">
         <div asp-validation-summary="All" class="text-danger w3-bar-item"></div>
-        <a asp-controller="Company" asp-action="AddUser" class="w3-bar-item w3-button accordian1 w3-right" data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Add User"><i class="fas fa-user-plus"></i></a>
+        <a asp-controller="Company" asp-action="AddUser" class="w3-bar-item w3-button accordian1 w3-right" data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Add User"><i class="fas fa-user-plus fa-fw"></i></a>
     </div>
     <table id="users" class="display">
         <thead>
@@ -24,11 +24,11 @@
             @foreach (var user in Model.CompanyUsers)
             {
                 <tr>
-                    <td class="w3-center">@user.Name</td>
+                    <td class="w3-center"><a href="/CompanyUser/UserDetail/@user.Id" class="edit" data-message-id="@user.Id">@user.Name</a></td>
                     <td class="w3-center">@user.Profile.Role</td>
                     <td class="w3-center">@user.UserContact.Email</td>
-                    <td class="w3-center" style="width: 50px"><a class="js-delete" href="/CompanyUser/UserDetail/@user.Id" data-message-id="@user.Id"><i class="far fa-edit"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Edit User"></i></a></td>
-                    <td class="w3-center" style="width: 50px"><a class="js-delete" href="javascript:void(0);" data-message-id="@user.Id"><i class="far fa-trash-alt"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Delete User"></i></a></td>
+                    <td class="w3-center" style="width: 50px"><a class="addSub" href="javascript:void(0);" data-message-id="@user.Id"><i class="far fa-plus-square"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Add Subscription"></i></a></td>
+                    <td class="w3-center" style="width: 50px"><a class="delete" href="javascript:void(0);" data-message-id="@user.Id"><i class="far fa-trash-alt"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Delete User"></i></a></td>
                 </tr>
             }
         </tbody>

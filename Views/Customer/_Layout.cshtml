@@ -1,20 +1,15 @@
 ﻿@{ 
     Layout = "/Views/Shared/_Layout.cshtml";
 }
-    <h2>
-        Customer Details
-        <a class="w3-bar-item w3-button w3-hover-black w3-hide-medium w3-hide-large w3-right" href="javascript:void(0);" onclick="toggleFunction()" title="Toggle Navigation Menu">
-            <i class="fa fa-bars"></i>
-        </a>
-    </h2>
     <div class="w3-row-padding w3-margin-top">
         
         <div class="w3-hide" id="showBar">
             <i class="fas fa-eye w3-button" onclick="toggleSideBar()"></i> 
         </div>
-        <div id="sideBar" class="w3-quarter w3-hide-small w3-show">
+        <div id="sideBar" class="w3-quarter w3-sidebar w3-collapse w3-hide-small w3-show" style="background:none!important">
+            <div style="height: 50px"></div>
+        
             <div class="w3-container" style="min-height:460px">
-                <i id="hideBar" class="fas fa-eye-slash w3-button w3-block w3-show" onclick="toggleSideBar()"></i>
                 @Html.Partial("_UserSideBar")
             </div>
         </div>
@@ -24,9 +19,16 @@
                 @Html.Partial("_UserSideBar")
             </div>   
         </div>
-        
-        <div id="pageContent" class="w3-threequarter">
+    
+        <div id="pageContent" style="margin-left:300px;margin-top:43px;">
+            <h2 class="w3-section">
+                Customer Details
+                <a class="w3-bar-item w3-button w3-hover-black w3-hide-medium w3-hide-large w3-right" href="javascript:void(0);" onclick="toggleFunction()" title="Toggle Navigation Menu">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </h2>
             @RenderBody()
+            <div class="w3-row"><p><br></p></div>
         </div>
     </div>
     

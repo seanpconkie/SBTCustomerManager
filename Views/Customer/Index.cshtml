@@ -1,10 +1,53 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
+﻿@model SBTCustomerManager.Models.CustomerViewModels.CustomerViewModel
+@{
+    ViewData["Title"] = "Customers";
+}
 
-</body>
-</html>
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+
+<div class="w3-container">
+    <div class="w3-bar w3-padding">
+        <div asp-validation-summary="All" class="text-danger w3-bar-item"></div>
+        <a asp-controller="Customer" asp-action="AddCompany" class="w3-bar-item w3-button accordian1 w3-right" data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Add Company"><i class="fas fa-building fa-fw"></i></a>
+    </div>
+    <table id="users" class="display">
+        <thead>
+            <tr>
+                <th>Company Name</th>
+                <th>Start Date</th>
+                <th>Contact</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var customer in Model.Customers)
+            {
+                <tr>
+                    <td class="w3-center"><a href="/Customer/Customer/@customer.Company.Id" data-message-id="@customer.Company.Id">@customer.Company.Name</a></td>
+                    <td class="w3-center">@customer.Company.StartDate</td>
+                    <td class="w3-center">@customer.Contact.Name</td>
+                    <td class="w3-center" style="width: 50px"><a class="js-edit" href="javascript:void(0);" data-message-id="@customer.Company.Id"><i class="far fa-edit"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Edit Customer"></i></a></td>
+                    <td class="w3-center" style="width: 50px"><a class="js-delete" href="javascript:void(0);" data-message-id="@customer.Company.Id"><i class="far fa-trash-alt"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Delete Customer"></i></a></td>
+                </tr>
+            }
+        </tbody>
+    </table>    
+</div><br>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#users").DataTable();
+    
+        });
+    </script>
+    <script>
+        $("[data-toggle='popover']").popover({ trigger: "hover" });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>  
+}

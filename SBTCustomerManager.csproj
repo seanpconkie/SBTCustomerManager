@@ -26,6 +26,7 @@
     <None Remove="Views\User\_Layout.html" />
     <None Remove="Views\User\_StatusMessage.cshtml" />
     <None Remove="Models\CompanyDataModel\CompanyUserViewModel.css" />
+    <None Remove="Views\Customer\Subscription.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\UserDataModels\" />
@@ -41,6 +42,7 @@
     <Folder Include="Models\RoleViewModels\" />
     <Folder Include="Views\SiteSettings\" />
     <Folder Include="Models\SiteSettingsViewModels\" />
+    <Folder Include="Models\CustomerViewModels\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="Views\SiteSettings\Index.cshtml" />

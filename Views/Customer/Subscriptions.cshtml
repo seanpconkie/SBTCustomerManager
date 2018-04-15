@@ -1,0 +1,47 @@
+﻿@model SBTCustomerManager.Models.CustomerViewModels.SelectedCustomerViewModel
+@{
+    ViewData["Title"] = @Model.Customer.Company.Name;
+}
+
+<div class="w3-bar">
+    @Html.Partial("_CustomerNavBar",Model)
+</div>
+<hr>
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+
+<div class="w3-container">
+    <div class="w3-bar w3-padding">
+        <div asp-validation-summary="All" class="text-danger w3-bar-item"></div>
+    </div>
+    <table id="subs" class="display">
+        <thead>
+            <tr>
+                <th>Subscription Type</th>
+                <th>Subscription Start</th>
+                <th>Cost</th>
+                <th>Billing Frequency</th>
+                <th>Number of Users</th>
+                <th>Unit Price</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>    
+</div><br>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#subs").DataTable();
+    
+        });
+    </script>
+    <script>
+        $("[data-toggle='popover']").popover({ trigger: "hover" });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>  
+}

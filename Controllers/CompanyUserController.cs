@@ -92,7 +92,7 @@ namespace SBTCustomerManager.Controllers
             }
 
             // set role list
-            model.RoleList = SetRoleList(model.UserDetails.UserId);
+            model.RoleList = SetRoleList(model.UserDetails.UserId).Result;
 
             return View(model);
 
@@ -255,7 +255,7 @@ namespace SBTCustomerManager.Controllers
                 newRole.Type = _context.RoleType.SingleOrDefault(c => c.Id == newRole.TypeId);
                 newRole.Description = _context.RoleDescriptions.SingleOrDefault(c => c.RoleId == newRole.RoleId).Description;
 
-                if (newRole.TypeId == 0 && userDetail.CompanyId == 0)
+                if (newRole.TypeId == 0 && userDetail.CompanyId != 1)
                 {
                     break;
                 }

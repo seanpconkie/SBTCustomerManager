@@ -1,0 +1,83 @@
+﻿@model SBTCustomerManager.Models.CustomerViewModels.SelectedCustomerViewModel
+@{
+    ViewData["Title"] = @Model.Customer.Company.Name;
+}
+
+<div class="w3-bar">
+    @Html.Partial("_CustomerNavBar",Model)
+</div>
+<hr>
+
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+<form>
+    <div class="w3-container">
+        <div class="w3-bar w3-padding">
+            <div asp-validation-summary="All" class="text-danger w3-bar-item"></div>
+            <button type="submit" class="w3-button w3-bar-item w3-right accordian1 w3-text-white" data-toggle="popover" data-trigger="focus" data-content="Save Changes" data-placement="top"><i class="fas fa-save"></i></button>
+            <button type="reset" class="w3-button w3-bar-item w3-right accordian2 w3-text-white" data-toggle="popover" data-trigger="focus" data-content="Reset" data-placement="top"><i class="fas fa-redo"></i></button>
+        </div>
+    </div>
+    <div class="w3-container">
+        <div class="w3-row">
+            <div class="w3-half">
+                <div class="w3-container">
+                    <div class="form-group">
+                        <label asp-for="Customer.Company.Name"></label>
+                        <input asp-for="Customer.Company.Name" class="w3-input"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Customer.Contact.Name" >Company Contact</label>
+                        <input asp-for="Customer.Contact.Name" class=" w3-input" disabled=""/>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Customer.Contact.UserId" >Company Contact Id</label>
+                        <input asp-for="Customer.Contact.UserId" class=" w3-input" disabled=""/>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Customer.Contact.UserContact.Email" class=""></label><i class="fa fa-info-circle w3-margin-left" data-toggle="popover" data-trigger="focus" data-content="Company contact details are based on the user set as company contact."></i>
+                        <input asp-for="Customer.Contact.UserContact.Email" class=" w3-input" disabled=""/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w3-half">
+                <div class="w3-container">
+                    <div class="form-group">
+
+                      <label><i class="fas fa-map-marker fa-fw w3-margin-right"></i>Address<i class="fa fa-info-circle w3-margin-left" data-toggle="popover" data-trigger="focus" data-content="Company contact details are based on the user set as company contact."></i></label>
+                      <textarea class="w3-input" disabled="" style="height: 255px;width: 400px;">FAO @Model.Customer.Contact.Name  
+@Model.Customer.Company.Name
+@Model.Customer.Contact.UserContact.BuildingNumber @Model.Customer.Contact.UserContact.AddressLine1
+@Model.Customer.Contact.UserContact.AddressLine2
+@Model.Customer.Contact.UserContact.PostTown
+@Model.Customer.Contact.UserContact.County
+@Model.Customer.Contact.UserContact.Country
+@Model.Customer.Contact.UserContact.Postcode</textarea>        
+                    </div>
+               </div>
+            </div>
+            
+        </div>
+    </div>
+    
+</form>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#users").DataTable();
+    
+        });
+    </script>
+    <script>
+        $("[data-toggle='popover']").popover({ trigger: "hover" });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>  
+}
