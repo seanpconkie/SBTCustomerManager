@@ -8,19 +8,18 @@
 <div class="w3-content w3-container">
 
     <div class="w3-row">
-        <h2>Create a new account.</h2>
-        <hr />
+        <h2>Create a new account</h2>
         <div asp-validation-summary="All" class="text-danger"></div>
-            
-        <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
-
-            <div class="w3-container w3-half">
-            
+        <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" id="regForm">
+            <!-- One "tab" for each step in the form: -->
+            <div class="tab">
                 <h4>Your details</h4>
                 <hr />
                 <div class="form-group">
                     <label asp-for="Title"></label>
-                    @Html.DropDownListFor(m => m.Title,Model.Titles,"Select Title", new {@class = "w3-input", required=""})
+                    <div class="custom-select" style="width:100%;">
+                        @Html.DropDownListFor(m => m.Title,Model.Titles,"Select Title", new {@class = "w3-input", required=""})
+                    </div>
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
                 <br>
@@ -34,6 +33,9 @@
                     <input asp-for="Surname" class="w3-input" />
                     <span asp-validation-for="Surname" class="text-danger"></span>
                 </div>
+            </div>
+            
+            <div class="tab">
                 <h4>Contact details</h4>
                 <hr />
                 <div class="form-group">
@@ -57,7 +59,8 @@
                     <span asp-validation-for="OtherPhone" class="text-danger"></span>
                 </div>
             </div>
-            <div class="w3-container w3-half">
+            
+            <div class="tab">
                 <h4>Account details</h4>
                 <hr />
 
@@ -81,55 +84,77 @@
                     <input asp-for="CompanyName" class="w3-input" />
                     <span asp-validation-for="CompanyName" class="text-danger"></span>
                 </div>
+            </div>
+            
+            <div class="tab">
                 <h4>Address details</h4>
                 <hr />
-                <div id="locationField">
-                    <input id="autocomplete" placeholder="Enter your address"onFocus="geolocate()" type="text" class="w3-input"/>
-                </div>
-                <div class="form-group">
-                    <label asp-for="BuildingNumber"></label>
-                    <input asp-for="BuildingNumber" class="w3-input" id="street_number"/>
-                    <span asp-validation-for="BuildingNumber" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="AddressLine1"></label>
-                    <input asp-for="AddressLine1" class="w3-input" id="route"/>
-                    <span asp-validation-for="AddressLine1" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="AddressLine2"></label>
-                    <input asp-for="AddressLine2" class="w3-input" />
-                    <span asp-validation-for="AddressLine2" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="PostTown"></label>
-                    <input asp-for="PostTown" class="w3-input" id="postal_town"/>
-                    <span asp-validation-for="PostTown" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="County"></label>
-                    <input asp-for="County" class="w3-input" id="locality"/>
-                    <span asp-validation-for="County" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Country"></label>
-                    <input asp-for="Country" class="w3-input" id="country"/>
-                    <span asp-validation-for="Country" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Postcode"></label>
-                    <input asp-for="Postcode" class="w3-input" id="postal_code"/>
-                    <span asp-validation-for="Postcode" class="text-danger"></span>
+                <div class="w3-row-padding">
+                    <div class="w3-half">
+                        <div class="w3-container">
+                            <div id="locationField">
+                                <label><i class="fas fa-map-marker fa-fw w3-margin-right"></i>Address</label>
+                                <input id="autocomplete" placeholder="Enter your address"onFocus="geolocate()" type="text" class="w3-input"/>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="AddressLine1"></label>
+                                <input asp-for="AddressLine1" class="w3-input" id="route"/>
+                                <span asp-validation-for="AddressLine1" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="PostTown"></label>
+                                <input asp-for="PostTown" class="w3-input" id="postal_town"/>
+                                <span asp-validation-for="PostTown" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Country"></label>
+                                <input asp-for="Country" class="w3-input" id="country"/>
+                                <span asp-validation-for="Country" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w3-half">
+                        <div class="w3-container">
+                            <div class="form-group">
+                                <label asp-for="BuildingNumber"></label>
+                                <input asp-for="BuildingNumber" class="w3-input" id="street_number"/>
+                                <span asp-validation-for="BuildingNumber" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="AddressLine2"></label>
+                                <input asp-for="AddressLine2" class="w3-input" />
+                                <span asp-validation-for="AddressLine2" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="County"></label>
+                                <input asp-for="County" class="w3-input" id="locality"/>
+                                <span asp-validation-for="County" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Postcode"></label>
+                                <input asp-for="Postcode" class="w3-input" id="postal_code"/>
+                                <span asp-validation-for="Postcode" class="text-danger"></span>
+                            </div>          
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="w3-row">
-                <p>
-                    By registering you agree to our <a href="">Terms and Conditions</a> and our <a href="">Privacy Policy</a>.
-                </p>
-                <p>
-                    <button type="submit" class="accordian1 w3-text-white w3-padding w3-block w3-button w3-round">Register</button>
-                </p>
+            
+            <div style="overflow:auto;" class="w3-padding">
+                <div style="float:right;">
+                <button type="button" id="prevBtn" onclick="nextPrev(-1)" class="w3-button accordian2 w3-text-white">Previous</button>
+                <button type="button" id="nextBtn" onclick="nextPrev(1)" class="w3-button accordian1 w3-text-white">Next</button>
+                </div>
             </div>
+            
+            <!-- Circles which indicates the steps of the form: -->
+            <div style="text-align:center;margin-top:40px;">
+                <span class="step"></span>
+                <span class="step"></span>
+                <span class="step"></span>
+                <span class="step"></span>
+            </div>
+            
         </form>
 
     </div>
@@ -146,5 +171,8 @@
     </script>
     <script src="https://s3.amazonaws.com/sbt-solutions.co.uk/addressAutoComplete.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOfCiFMuWl_6DzM4BsVFPYZ7ZvWmHcKR0&libraries=places&callback=initAutocomplete" async="" defer="defer"></script>
-
+    <script src="https://s3.amazonaws.com/sbt-solutions.co.uk/customSelect.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="https://s3.amazonaws.com/sbt-solutions.co.uk/customSelect.css"/>
+    <script src="https://s3.amazonaws.com/sbt-solutions.co.uk/multiPageForm.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="https://s3.amazonaws.com/sbt-solutions.co.uk/multiPageForm.css" />
 }

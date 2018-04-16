@@ -232,15 +232,7 @@ namespace SBTCustomerManager.Controllers
 
             var viewModel = new RegisterViewModel();
 
-            List<SelectListItem> titles = new List<SelectListItem>();
-            var resultList = _context.Titles.Where(c => c.Id > 0).OrderBy(x => x.Value).ToList();
-
-            foreach (var item in resultList)
-            {
-                titles.Add(new SelectListItem { Value = item.Value, Text = item.Value });
-            }
-
-            viewModel.Titles = titles;
+            viewModel.Titles = Title.GetTitles(_context.Titles.Where(c => c.Id > 0).OrderBy(x => x.Value).ToList());
 
             return View(viewModel);
         }
@@ -335,6 +327,7 @@ namespace SBTCustomerManager.Controllers
 
 
             // If we got this far, something failed, redisplay form
+            model.Titles = Title.GetTitles(_context.Titles.Where(c => c.Id > 0).OrderBy(x => x.Value).ToList());
             return View(model);
         }
 

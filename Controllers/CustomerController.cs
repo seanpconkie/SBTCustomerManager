@@ -321,15 +321,8 @@ namespace SBTCustomerManager.Controllers
         private StaffMemberViewModel GetStaffMember(long id)
         {
             var model = new StaffMemberViewModel() {StatusMessage = StatusMessage};
-            List<SelectListItem> titles = new List<SelectListItem>();
-            var resultList = _context.Titles.Where(c => c.Id > 0).OrderBy(x => x.Value).ToList();
 
-            foreach (var item in resultList)
-            {
-                titles.Add(new SelectListItem { Value = item.Value, Text = item.Value });
-            }
-
-            model.Titles = titles;
+            model.Titles = Title.GetTitles(_context.Titles.Where(c => c.Id > 0).OrderBy(x => x.Value).ToList());
 
             model.UserDetails = _context.UserDetails.Include(x => x.Company).Include(x => x.Profile).Include(x => x.UserContact).SingleOrDefault(x => x.Id == id);
             model.Customer = new Customer() { Company = model.UserDetails.Company};

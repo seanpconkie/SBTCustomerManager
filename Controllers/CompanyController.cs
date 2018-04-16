@@ -121,7 +121,11 @@ namespace SBTCustomerManager.Controllers
         {
             ViewData["ReturnUrl"] = returnUrl;
 
-            return View();
+            var viewModel = new RegisterViewModel();
+
+            viewModel.Titles = Title.GetTitles(_context.Titles.Where(c => c.Id > 0).OrderBy(x => x.Value).ToList());
+
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -209,6 +213,7 @@ namespace SBTCustomerManager.Controllers
             }
 
             // If we got this far, something failed, redisplay form
+            model.Titles = Title.GetTitles(_context.Titles.Where(c => c.Id > 0).OrderBy(x => x.Value).ToList());
             return View(model);
         }
 
