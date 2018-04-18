@@ -83,7 +83,7 @@ namespace SBTCustomerManager.Controllers
             var viewModel = new CompanyViewModel
             {
                 CompanyDetails = _context.CompanyDetails.SingleOrDefault(c => c.Id == userDetail.CompanyId),
-                CompanyUsers = _context.UserDetails.Include(c => c.Profile).Include(c => c.UserContact).Where(c => c.CompanyId == userDetail.CompanyId).Where(c => c.UserId != userDetail.UserId)
+                CompanyUsers = _context.UserDetails.Include(c => c.Profile).Include(c => c.UserContact).Where(c => c.CompanyId == userDetail.CompanyId).Where(c => c.UserId != userDetail.UserId).Where(x => x.EndDate > DateTime.Now)
             };
 
             viewModel.CompanyContact = _context.UserDetails.Include(c => c.UserContact).SingleOrDefault(c => c.UserId == viewModel.CompanyDetails.UserId);

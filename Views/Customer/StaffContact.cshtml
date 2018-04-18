@@ -104,16 +104,7 @@
         </div>
     </div>
 </form>
-    
-<!-- Modal that pops up when you click on to add or delete role -->
-<div id="id01" class="w3-modal" style="z-index:4">
-    <div class="w3-modal-content w3-animate-zoom" style="width: 400px">
-        <div class="w3-container w3-padding-large">
-            <div class="w3-center w3-padding-large"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></div>
-            <h2 class="w3-center">Please wait....</h2>
-        </div>
-    </div>    
-</div>
+@Html.Partial("_Loading")
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

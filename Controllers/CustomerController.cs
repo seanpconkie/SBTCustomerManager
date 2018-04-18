@@ -15,6 +15,7 @@ using SBTCustomerManager.Models.RoleViewModels;
 using SBTCustomerManager.Models.UserDataModels;
 using SBTCustomerManager.Services;
 using SBTCustomerManager.Models.CompanyDataModel;
+using SBTCustomerManager.Models.AccountViewModels;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -127,7 +128,7 @@ namespace SBTCustomerManager.Controllers
             userInDb.Name = model.UserDetails.ForeName + " " + model.UserDetails.Surname;
             userInDb.Title = model.UserDetails.Title;
             userInDb.CompanyId = selectedCompany.Id;
-            userInDb.Company.Name = selectedCompany.Name;
+            userInDb.ProfileId = model.UserDetails.Profile.Id;
 
             _context.Update(userInDb);
 
@@ -203,6 +204,101 @@ namespace SBTCustomerManager.Controllers
             return View(viewModel);
         }
 
+
+        [HttpGet]
+        public IActionResult AddStaff(long id, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+
+            var viewModel = new AddStaffViewModel();
+
+            var company = _context.CompanyDetails.SingleOrDefault(c => c.Id == id);
+
+            var customer = new Customer()
+            {
+                Company = company
+            };
+
+            viewModel.Customer = customer;
+            viewModel.Titles = Title.GetTitles(_context.Titles.Where(c => c.Id > 0).OrderBy(x => x.Value).ToList());
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddStaff(AddStaffViewModel model, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            if (ModelState.IsValid)
+            {
+
+                var user = new ApplicationUser
+                {
+                    UserName = model.Username,
+                    Email = model.Email
+                };
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("User created a new account with password.");
+
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+
+                    // create additional user info
+                    var contact = new UserContact();
+                    var newUser = new UserDetail();
+
+                    contact.BuildingNumber = model.BuildingNumber;
+                    contact.AddressLine1 = model.AddressLine1;
+                    contact.AddressLine2 = model.AddressLine2;
+                    contact.PostTown = model.PostTown;
+                    contact.County = model.County;
+                    contact.Country = model.Country;
+                    contact.Postcode = model.Postcode;
+                    contact.MobilePhone = model.MobilePhone;
+                    contact.WorkPhone = model.WorkPhone;
+                    contact.OtherPhone = model.OtherPhone;
+                    contact.Email = model.Email;
+                    contact.UserId = user.Id;
+
+                    _context.Add(contact);
+                    _context.SaveChanges();
+
+                    newUser.ForeName = model.ForeName;
+                    newUser.Surname = model.Surname;
+                    newUser.Name = model.ForeName + ' ' + model.Surname;
+                    newUser.Title = model.Title;
+                    newUser.StartDate = DateTime.Now;
+                    newUser.EndDate = new DateTime(2070, 1, 1);
+                    newUser.UserContactId = contact.Id;
+                    newUser.CompanyId = model.Customer.Company.Id;
+                    newUser.UserId = user.Id;
+
+                    _context.Add(newUser);
+                    _context.SaveChanges();
+
+                    // Create welcome message
+                    _context.Add(Messages.WelcomeMessage(user.Id, newUser.Name));
+                    _context.SaveChanges();
+
+                    // Add CanViewCompany role
+                    await _userManager.AddToRoleAsync(user, "CanViewCompany");
+
+                    return RedirectToLocal("/Customer/Customer/" + model.Customer.Company.Id.ToString());
+
+                }
+                AddErrors(result);
+            }
+
+
+            // If we got this far, something failed, redisplay form
+            model.Titles = Title.GetTitles(_context.Titles.Where(c => c.Id > 0).OrderBy(x => x.Value).ToList());
+            return View(model);
+        }
+
         public async Task<IActionResult> AddRole(string roleId, string userId)
         {
 
@@ -222,6 +318,40 @@ namespace SBTCustomerManager.Controllers
             StatusMessage = "User profile has been updated";
 
             return RedirectToAction("StaffProfile", new { id = _context.UserDetails.SingleOrDefault(c => c.UserId == userId).Id });
+
+        }
+
+        public async Task<IActionResult> DeleteStaff(string userId)
+        {
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+            var userDetails = _context.UserDetails.SingleOrDefault(x => x.UserId == userId);
+
+
+            var result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+
+                userDetails.EndDate = DateTime.Now;
+
+                _context.Update(userDetails);
+                _context.SaveChanges();
+
+                StatusMessage = string.Format("User '{0}' has been deleted.",userDetails.Name);
+
+            }
+            else
+            {
+                StatusMessage = string.Format("Could not delete user '{0}'.", userDetails.Name);
+            }
+            AddErrors(result);
+            var viewModel = GetSelectedCustomer(userDetails.Id);
+            viewModel.StatusMessage = StatusMessage;
+            return View(viewModel);
 
         }
 
@@ -433,9 +563,9 @@ namespace SBTCustomerManager.Controllers
                 newRole.Type = _context.RoleType.SingleOrDefault(c => c.Id == newRole.TypeId);
                 newRole.Description = _context.RoleDescriptions.SingleOrDefault(c => c.RoleId == newRole.RoleId).Description;
 
-                if (newRole.TypeId == 0 && userDetail.CompanyId != 1)
+                if (newRole.TypeId == 0)
                 {
-                    break;
+                    continue;
                 }
 
                 if (activeRoles.Count == 0)
