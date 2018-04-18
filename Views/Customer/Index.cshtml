@@ -25,7 +25,7 @@
             {
                 <tr>
                     <td class="w3-center"><a href="/Customer/Customer/@customer.Company.Id" data-message-id="@customer.Company.Id">@customer.Company.Name</a></td>
-                    <td class="w3-center">@customer.Company.StartDate</td>
+                    <td class="w3-center">@customer.Company.StartDate.Value.ToString("dd MMM yyyy")</td>
                     <td class="w3-center">@customer.Contact.Name</td>
                     <td class="w3-center" style="width: 50px"><a class="js-edit" href="javascript:void(0);" data-message-id="@customer.Company.Id"><i class="far fa-edit"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Edit Customer"></i></a></td>
                     <td class="w3-center" style="width: 50px"><a class="js-delete" href="javascript:void(0);" data-message-id="@customer.Company.Id"><i class="far fa-trash-alt"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Delete Customer"></i></a></td>

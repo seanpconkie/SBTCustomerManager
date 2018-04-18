@@ -8,9 +8,11 @@ namespace SBTCustomerManager.Models.SubscriptionViewModels
         public long CompanyId { get; set; }
 
         [Display(Name = "Subscription Type")]
+        [Required]
         public int SubscriptionTypeId { get; set; }
         public SubscriptionType SubscriptionType { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
@@ -25,6 +27,8 @@ namespace SBTCustomerManager.Models.SubscriptionViewModels
         public string Url { get; set; }
 
         public int Users { get; set; }
+
+
 
     }
 }

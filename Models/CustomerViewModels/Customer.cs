@@ -13,6 +13,6 @@ namespace SBTCustomerManager.Models.CustomerViewModels
         public CompanyDetail Company { get; set; }   
         public UserDetail Contact { get; set; }  
         public List<UserDetail> Staff { get; set; }
-        public IEnumerable<Subscription> CompanySubscriptions { get; set; } 
+        public List<Subscription> CompanySubscriptions { get; set; } 
     }
 }

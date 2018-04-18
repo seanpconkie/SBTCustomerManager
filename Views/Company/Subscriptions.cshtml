@@ -25,7 +25,7 @@
             {
                 <tr>
                     <td><a href="@subscription.Url">@subscription.SubscriptionType.Type</a></td>
-                    <td class="w3-center">@subscription.StartDate</td>
+                    <td class="w3-center">@subscription.StartDate.Value.ToString("dd MMM yyyy")</td>
                     <td class="w3-center">£@subscription.Cost</td>
                     <td class="w3-center">@subscription.BillingFrequency</td>
                     <td class="w3-center">@subscription.Users</td>

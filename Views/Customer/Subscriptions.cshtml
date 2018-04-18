@@ -1,4 +1,4 @@
-﻿@model SBTCustomerManager.Models.CustomerViewModels.SelectedCustomerViewModel
+﻿@model SBTCustomerManager.Models.CustomerViewModels.SubscriptionViewModel
 @{
     ViewData["Title"] = @Model.Customer.Company.Name;
 }
@@ -12,6 +12,7 @@
 <div class="w3-container">
     <div class="w3-bar w3-padding">
         <div asp-validation-summary="All" class="text-danger w3-bar-item"></div>
+        <a href="javascript:void(0);" onclick="document.getElementById('idSub').style.display='block'" class="w3-bar-item w3-button accordian1 w3-right" data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Add Subscription"><i class="fas fa-dollar-sign fa-fw"></i></a>        
     </div>
     <table id="subs" class="display">
         <thead>
@@ -22,12 +23,74 @@
                 <th>Billing Frequency</th>
                 <th>Number of Users</th>
                 <th>Unit Price</th>
+                <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
+            @foreach (var subscription in Model.Customer.CompanySubscriptions)
+            {
+                <tr>
+                    <td><a href="@subscription.Url">@subscription.SubscriptionType.Type</a></td>
+                    <td class="w3-center">@subscription.StartDate.Value.ToString("dd MMM yyyy")</td>
+                    <td class="w3-center">£@subscription.Cost</td>
+                    <td class="w3-center">@subscription.BillingFrequency</td>
+                    <td class="w3-center">@subscription.Users</td>
+                    <td class="w3-center">£@subscription.UnitPrice</td>
+                    <td class="w3-center" style="width: 50px"><a class="edit" href="javascript:void(0);" ><i class="far fa-edit"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Edit Subscription"></i></a></td>
+                    <td class="w3-center" style="width: 50px"><a class="delete" href="javascript:void(0);" ><i class="far fa-trash-alt"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Delete Subscription"></i></a></td>
+                </tr>
+            }
         </tbody>
     </table>    
 </div><br>
+
+
+<!-- Modal that pops up when you click to add or edit subscription -->
+<div id="idSub" class="w3-modal" style="z-index:4">
+    <div class="w3-modal-content w3-animate-zoom">
+        <form method="POST">
+            <div class="w3-container w3-padding-large">
+            <span onclick="document.getElementById('idSub').style.display='none'" class="w3-button w3-right" title="Close Modal">&times;</span>
+                <h2 class="w3-center">Subscription</h2>
+                <div class="w3-content w3-padding-large">
+                    <div class="form-group">
+                        <label asp-for="NewSubscription.SubscriptionTypeId"></label>
+                        <div class="custom-select" style="width:100%;">
+                            @Html.DropDownListFor(m => m.NewSubscription.SubscriptionTypeId,Model.Types,"Select Subscription Type", new {@class = "w3-input", required=""})
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NewSubscription.UnitPrice"></label><i class="fas fa-info-circle w3-margin-left"  data-toggle="popover" data-trigger="focus"  data-placement="right" data-content="Cost per user"></i>
+                        <input asp-for="NewSubscription.UnitPrice" class="w3-input" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NewSubscription.Cost"></label><i class="fas fa-info-circle w3-margin-left"  data-toggle="popover" data-trigger="focus"  data-placement="right" data-content="Total Cost - if subscription has unit cost this can be left empty."></i>
+                        <input asp-for="NewSubscription.Cost" class="w3-input" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NewSubscription.BillingFrequency"></label>
+                        <div class="custom-select" style="width:100%;">
+                            @Html.DropDownListFor(m => m.NewSubscription.BillingFrequency,Model.Frequencies,"Select Billing Frequncy", new {@class = "w3-input", required=""})
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NewSubscription.Url"></label>
+                        <input asp-for="NewSubscription.Url" class="w3-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="" style="background-color:#f1f1f1">
+                <div class="w3-bar w3-padding-large">
+                    <button type="button" onclick="document.getElementById('idSub').style.display='none'" class="w3-button w3-text-white" style="background-color: #f44336;">Cancel</button>
+                    <button type="submit" class="w3-button accordian1 w3-right w3-text-white">Save</button>
+                </div>
+            </div>
+            <input asp-for="Customer.Company.Id" type="hidden"/>
+        </form>
+    </div>    
+</div>
 
 @section scripts
 {
@@ -44,4 +107,6 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>  
+    <script src="https://s3.amazonaws.com/sbt-solutions.co.uk/customSelect.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="https://s3.amazonaws.com/sbt-solutions.co.uk/customSelect.css"/>
 }

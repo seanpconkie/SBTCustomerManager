@@ -32,7 +32,7 @@
                 <tr>
                     <td class="w3-center"><a href="/Customer/StaffDetail/@member.Id" class="edit" data-message-id="@member.Id">@member.Name</a></td>
                     <td class="w3-center">@member.Profile.Role</td>
-                    <td class="w3-center">@member.StartDate</td>
+                    <td class="w3-center">@member.StartDate.Value.ToString("dd MMM yyyy")</td>
                     @if (member.EndDate == new DateTime(2070, 01, 01))
                     {
                         <td class="w3-center"></td>
@@ -41,7 +41,7 @@
                     }
                     else
                     {
-                        <td class="w3-center">@member.EndDate</td>
+                        <td class="w3-center">@member.EndDate.Value.ToString("dd MMM yyyy")</td>
                         <td class="w3-center"></td>
                         <td class="w3-center"></td>
                     }
@@ -49,6 +49,20 @@
             }
         </tbody>
     </table>    
+    <div class="w3-container">
+        <!-- Rounded switch -->
+        <label class="switch">
+            @if (!Model.includeDeleted)
+            {
+                <input type="checkbox" checked="checked"/>
+            }
+            else
+            {
+                <input type="checkbox"/>
+            }
+            <span onclick="window.location.href='/Customer/Staff/?id=@Model.Customer.Company.Id&includeDeleted=@Model.includeDeleted'" class="slider round"  data-toggle="popover" data-trigger="focus"  data-placement="right" data-content="Include Deleted Staff"></span>
+        </label>
+    </div>
 </div>
 @Html.Partial("_Loading")
 
@@ -69,6 +83,12 @@
             }
     
         })
+
+    function includeDeletedFunc() {
+
+        document.getElementById('id01')
+
+    }
 </script>
 <script>
     $("[data-toggle='popover']").popover({ trigger: "hover" });
@@ -76,4 +96,5 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>  
+<link rel="stylesheet" type="text/css" media="screen" href="https://s3.amazonaws.com/sbt-solutions.co.uk/sliderCheckBox.css"/>
 }

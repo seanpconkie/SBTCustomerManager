@@ -16,6 +16,7 @@ using SBTCustomerManager.Models.UserDataModels;
 using SBTCustomerManager.Services;
 using SBTCustomerManager.Models.CompanyDataModel;
 using SBTCustomerManager.Models.AccountViewModels;
+using SBTCustomerManager.Models.SubscriptionViewModels;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -105,9 +106,9 @@ namespace SBTCustomerManager.Controllers
             return View(GetSelectedCustomer(id));
         }
         [HttpGet]
-        public IActionResult Staff(long id)
+        public IActionResult Staff(long id, bool includeDeleted = false)
         {
-            return View(GetSelectedCustomer(id));
+            return View(GetSelectedCustomer(id, includeDeleted));
         }
 
         [HttpGet]
@@ -378,9 +379,63 @@ namespace SBTCustomerManager.Controllers
         [HttpGet]
         public IActionResult Subscriptions(long id)
         {
-            
-            return View();
+            var viewModel = new Models.CustomerViewModels.SubscriptionViewModel();
 
+            var customer = new Customer()
+            {
+                CompanySubscriptions = _context.Subscriptions.Include(c => c.SubscriptionType).Where(c => c.CompanyId == id).ToList(),
+                Company = _context.CompanyDetails.SingleOrDefault(c => c.Id == id)
+            };
+
+            viewModel.Customer = customer;
+            viewModel.Types = SubscriptionType.GetTypes(_context.SubscriptionTypes.Where(x => x.Id > 0).ToList());
+
+            return View(viewModel);
+
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Subscriptions(Models.CustomerViewModels.SubscriptionViewModel model)
+        {
+
+            var companyId = model.Customer.Company.Id;
+            var subscription = new Subscription()
+            {
+                SubscriptionTypeId = model.NewSubscription.SubscriptionTypeId,
+                StartDate = DateTime.Now,
+                EndDate = new DateTime(2070,01,01),
+                UnitPrice = model.NewSubscription.UnitPrice,
+                Cost = model.NewSubscription.Cost,
+                Url = model.NewSubscription.Url,
+                CompanyId = companyId,
+                BillingFrequency = model.NewSubscription.BillingFrequency
+            };
+
+            var viewModel = new Models.CustomerViewModels.SubscriptionViewModel();
+
+            try
+            {
+                _context.Add(subscription);
+                _context.SaveChanges();
+                StatusMessage = "New subscription added.";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = string.Format("An error occured when adding subscription: {0}", ex.Message);
+                viewModel.NewSubscription = subscription;
+            }
+
+            var customer = new Customer()
+            {
+                CompanySubscriptions = _context.Subscriptions.Include(c => c.SubscriptionType).Where(c => c.CompanyId == companyId).ToList(),
+                Company = _context.CompanyDetails.SingleOrDefault(c => c.Id == companyId)
+            };
+
+            viewModel.Customer = customer;
+            viewModel.StatusMessage = StatusMessage;
+
+            return View(viewModel);
+        
         }
 
         #region Helpers
@@ -409,11 +464,20 @@ namespace SBTCustomerManager.Controllers
 
         #region private methods
         [NonAction]
-        private SelectedCustomerViewModel GetSelectedCustomer(long id)
+        private SelectedCustomerViewModel GetSelectedCustomer(long id, bool includeDeleted = false)
         {
-            var viewModel = new SelectedCustomerViewModel() { StatusMessage = StatusMessage };
+            var viewModel = new SelectedCustomerViewModel() { StatusMessage = StatusMessage, includeDeleted = !includeDeleted };
             var company = _context.CompanyDetails.SingleOrDefault(c => c.Id == id);
-            var companyUsers = _context.UserDetails.Where(x => x.CompanyId == id).Include(c => c.UserContact).Include(p => p.Profile).ToList();
+            List<UserDetail> companyUsers;
+
+            if (includeDeleted)
+            {
+                companyUsers = _context.UserDetails.Where(x => x.CompanyId == id).Include(c => c.UserContact).Include(p => p.Profile).ToList();
+            }
+            else
+            {
+                companyUsers = _context.UserDetails.Where(x => x.CompanyId == id).Where(x => x.EndDate > DateTime.Now).Include(c => c.UserContact).Include(p => p.Profile).ToList();
+            }
             int contactIndex = -1;
             int inc = -1;
 
