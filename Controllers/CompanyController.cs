@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -66,6 +67,47 @@ namespace SBTCustomerManager.Controllers
 
             viewModel.CompanyContact = _context.UserDetails.Include(c => c.UserContact).SingleOrDefault(c => c.UserId == viewModel.CompanyDetails.UserId);
 
+            if (viewModel.CompanyContact != null)
+            {
+                var address = new StringBuilder();
+
+                if (viewModel.CompanyContact.UserId != "" && viewModel.CompanyContact.UserId != null)
+                {
+                    address.AppendLine(viewModel.CompanyContact.Name);
+                }
+                address.AppendLine(viewModel.CompanyDetails.Name);
+                if (viewModel.CompanyContact.UserContact.AddressLine1 != "" && viewModel.CompanyContact.UserContact.AddressLine1 != null)
+                {
+                    address.AppendLine(viewModel.CompanyContact.UserContact.AddressLine1);
+                }
+                if (viewModel.CompanyContact.UserContact.AddressLine2 != "" && viewModel.CompanyContact.UserContact.AddressLine2 != null)
+                {
+                    address.AppendLine(viewModel.CompanyContact.UserContact.AddressLine2);
+                }
+                if (viewModel.CompanyContact.UserContact.PostTown != "" && viewModel.CompanyContact.UserContact.PostTown != null)
+                {
+                    address.AppendLine(viewModel.CompanyContact.UserContact.PostTown);
+                }
+                if (viewModel.CompanyContact.UserContact.County != "" && viewModel.CompanyContact.UserContact.County != null)
+                {
+                    address.AppendLine(viewModel.CompanyContact.UserContact.County);
+                }
+                if (viewModel.CompanyContact.UserContact.Postcode != "" && viewModel.CompanyContact.UserContact.Postcode != null)
+                {
+                    address.AppendLine(viewModel.CompanyContact.UserContact.Postcode);
+                }
+                if (viewModel.CompanyContact.UserContact.Country != "" && viewModel.CompanyContact.UserContact.Country != null)
+                {
+                    address.AppendLine(viewModel.CompanyContact.UserContact.Country);
+                }
+
+                viewModel.Address = address.ToString();
+            }
+            else
+            {
+                viewModel.Address = viewModel.CompanyDetails.Name;
+            }
+
             return View(viewModel);
 
         }
@@ -90,6 +132,61 @@ namespace SBTCustomerManager.Controllers
             viewModel.CompanyContact = _context.UserDetails.Include(c => c.UserContact).SingleOrDefault(c => c.UserId == viewModel.CompanyDetails.UserId);
 
             return View(viewModel);
+
+        }
+
+        public async Task<IActionResult> DeleteStaff(string userId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+            var userDetail = _context.UserDetails.SingleOrDefault(c => c.UserId == user.Id);
+
+            var staff = await _userManager.FindByIdAsync(userId);
+            if (staff == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            var staffDetails = _context.UserDetails.SingleOrDefault(x => x.UserId == userId);
+            var result = await _userManager.DeleteAsync(staff);
+
+            if (result.Succeeded)
+            {
+                staffDetails.EndDate = DateTime.Now;
+
+                _context.Update(staffDetails);
+
+                var contactCompany = _context.CompanyDetails.SingleOrDefault(x => x.UserId == staff.Id);
+
+                if (contactCompany != null)
+                {
+                    contactCompany.UserId = null;
+                    _context.Update(contactCompany);
+                }
+
+                _context.SaveChanges();
+                StatusMessage = string.Format("User '{0}' has been deleted.", staffDetails.Name);
+            }
+            else
+            {
+                StatusMessage = string.Format("Could not delete user '{0}'.", staffDetails.Name);
+            }
+
+            AddErrors(result);
+
+            var viewModel = new CompanyViewModel
+            {
+                CompanyDetails = _context.CompanyDetails.SingleOrDefault(c => c.Id == userDetail.CompanyId),
+                CompanyUsers = _context.UserDetails.Include(c => c.Profile).Include(c => c.UserContact).Where(c => c.CompanyId == userDetail.CompanyId).Where(c => c.UserId != userDetail.UserId).Where(x => x.EndDate > DateTime.Now)
+            };
+
+            viewModel.CompanyContact = _context.UserDetails.Include(c => c.UserContact).SingleOrDefault(c => c.UserId == viewModel.CompanyDetails.UserId);
+
+            viewModel.StatusMessage = StatusMessage;
+            return View("Users",viewModel);
 
         }
 

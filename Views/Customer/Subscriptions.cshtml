@@ -8,10 +8,8 @@
 </div>
 <hr>
 @Html.Partial("_StatusMessage", Model.StatusMessage)
-
 <div class="w3-container">
     <div class="w3-bar w3-padding">
-        <div asp-validation-summary="All" class="text-danger w3-bar-item"></div>
         <a href="javascript:void(0);" onclick="document.getElementById('idSub').style.display='block'" class="w3-bar-item w3-button accordian1 w3-right" data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Add Subscription"><i class="fas fa-dollar-sign fa-fw"></i></a>        
     </div>
     <table id="subs" class="display">
@@ -37,8 +35,8 @@
                     <td class="w3-center">@subscription.BillingFrequency</td>
                     <td class="w3-center">@subscription.Users</td>
                     <td class="w3-center">£@subscription.UnitPrice</td>
-                    <td class="w3-center" style="width: 50px"><a class="edit" href="javascript:void(0);" ><i class="far fa-edit"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Edit Subscription"></i></a></td>
-                    <td class="w3-center" style="width: 50px"><a class="delete" href="javascript:void(0);" ><i class="far fa-trash-alt"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Delete Subscription"></i></a></td>
+                    <td class="w3-center" style="width: 50px"><a class="edit" href="/Customer/Subscriptions/?id=@Model.Customer.Company.Id&subscriptionId=@subscription.Id" data-sub-id="@subscription.Id"><i class="far fa-edit"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Edit Subscription"></i></a></td>
+                    <td class="w3-center" style="width: 50px"><a class="delete" href="javascript:void(0);" data-sub-id="@subscription.Id"><i class="far fa-trash-alt"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Delete Subscription"></i></a></td>
                 </tr>
             }
         </tbody>
@@ -46,13 +44,17 @@
 </div><br>
 
 
-<!-- Modal that pops up when you click to add or edit subscription -->
+<!-- Modal that pops up when you click to add a subscription -->
 <div id="idSub" class="w3-modal" style="z-index:4">
     <div class="w3-modal-content w3-animate-zoom">
         <form method="POST">
             <div class="w3-container w3-padding-large">
-            <span onclick="document.getElementById('idSub').style.display='none'" class="w3-button w3-right" title="Close Modal">&times;</span>
-                <h2 class="w3-center">Subscription</h2>
+                <div class="w3-row">
+                    <span onclick="document.getElementById('idSub').style.display='none'" class="w3-button w3-right" title="Close Modal"><i class="w3-xlarge fas fa-times"></i></span>
+                </div>
+                <h2 class="w3-center w3-opacity">Subscription</h2>
+                @Html.Partial("_StatusMessage", Model.StatusMessage)
+                <hr>
                 <div class="w3-content w3-padding-large">
                     <div class="form-group">
                         <label asp-for="NewSubscription.SubscriptionTypeId"></label>
@@ -62,11 +64,11 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="NewSubscription.UnitPrice"></label><i class="fas fa-info-circle w3-margin-left"  data-toggle="popover" data-trigger="focus"  data-placement="right" data-content="Cost per user"></i>
-                        <input asp-for="NewSubscription.UnitPrice" class="w3-input" type="text">
+                        <input asp-for="NewSubscription.UnitPrice" class="w3-input" type="number" step="0.01" placeholder="0.00">
                     </div>
                     <div class="form-group">
                         <label asp-for="NewSubscription.Cost"></label><i class="fas fa-info-circle w3-margin-left"  data-toggle="popover" data-trigger="focus"  data-placement="right" data-content="Total Cost - if subscription has unit cost this can be left empty."></i>
-                        <input asp-for="NewSubscription.Cost" class="w3-input" type="text">
+                        <input id="cost-Id" asp-for="NewSubscription.Cost" class="w3-input" type="number" step="0.01" placeholder="0.00">
                     </div>
                     <div class="form-group">
                         <label asp-for="NewSubscription.BillingFrequency"></label>
@@ -83,14 +85,16 @@
 
             <div class="" style="background-color:#f1f1f1">
                 <div class="w3-bar w3-padding-large">
-                    <button type="button" onclick="document.getElementById('idSub').style.display='none'" class="w3-button w3-text-white" style="background-color: #f44336;">Cancel</button>
-                    <button type="submit" class="w3-button accordian1 w3-right w3-text-white">Save</button>
+                    <button type="button" class="w3-button w3-text-white" style="background-color: #f44336;" onclick="document.getElementById('idSub').style.display='none'">Cancel</button>
+                    <button type="submit" class="w3-button accordian1 w3-right w3-text-white" onclick="document.getElementById('id01').style.display='block'">Save</button>
                 </div>
             </div>
             <input asp-for="Customer.Company.Id" type="hidden"/>
+            <input id="newSub-Id" asp-for="NewSubscription.Id" type="hidden"/>
         </form>
     </div>    
 </div>
+@Html.Partial("_Loading")
 
 @section scripts
 {
@@ -98,7 +102,29 @@
         $(document).ready(function () {
             $("#subs").DataTable();
     
+            var subId = document.getElementById("newSub-Id");
+
+            if (subId.value == "")
+            {
+                document.getElementById('idSub').style.display='none';
+            }
+            else
+            {
+                document.getElementById('idSub').style.display='block';
+            }
+
+            $("#subs").on("click", ".delete", function() {
+                    var button = $(this);
+
+                    if(confirm("Are you sure you want to delete this subscription?")) {
+                        document.getElementById('id01').style.display='block'
+                        window.location.href = "/Customer/DeleteSubscription/" + button.attr("data-sub-id")
+                    }
+            
+                })
+    
         });
+   
     </script>
     <script>
         $("[data-toggle='popover']").popover({ trigger: "hover" });

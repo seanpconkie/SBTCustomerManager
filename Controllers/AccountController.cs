@@ -286,6 +286,7 @@ namespace SBTCustomerManager.Controllers
 
                     company.Name = model.CompanyName;
                     company.StartDate = DateTime.Now;
+                    company.EndDate = new DateTime(2070, 1, 1);
                     company.UserId = user.Id;
                     if (company.Name != null)
                     {

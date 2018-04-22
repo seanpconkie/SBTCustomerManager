@@ -27,8 +27,8 @@
                     <td class="w3-center"><a href="/CompanyUser/UserDetail/@user.Id" class="edit" data-message-id="@user.Id">@user.Name</a></td>
                     <td class="w3-center">@user.Profile.Role</td>
                     <td class="w3-center">@user.UserContact.Email</td>
-                    <td class="w3-center" style="width: 50px"><a class="addSub" href="javascript:void(0);" data-message-id="@user.Id"><i class="far fa-plus-square"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Add Subscription"></i></a></td>
-                    <td class="w3-center" style="width: 50px"><a class="delete" href="javascript:void(0);" data-message-id="@user.Id"><i class="far fa-trash-alt"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Delete User"></i></a></td>
+                    <td class="w3-center" style="width: 50px"><a class="addSub" href="javascript:void(0);" data-message-id="@user.UserId"><i class="far fa-plus-square"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Add Subscription"></i></a></td>
+                    <td class="w3-center" style="width: 50px"><a class="delete" href="javascript:void(0);" data-user-id="@user.UserId"><i class="far fa-trash-alt"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Delete User"></i></a></td>
                 </tr>
             }
         </tbody>
@@ -37,17 +37,27 @@
 
 @section scripts
 {
-    <script>
-        $(document).ready(function () {
-            $("#users").DataTable();
-    
-        });
-    </script>
-    <script>
-        $("[data-toggle='popover']").popover({ trigger: "hover" });
-    </script>
+<script>
+    $(document).ready(function () {
+        $("#users").DataTable();
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>  
+        $("#users").on("click", ".delete", function() {
+            var button = $(this);
+
+            if (confirm ("Are you sure you want to delete this user?")) {
+                window.location.href="/Company/DeleteStaff/?userId=" + button.attr("data-user-id");
+                document.getElementById('id01').style.display='block';
+            }
+    
+        })
+    
+    });
+</script>
+<script>
+    $("[data-toggle='popover']").popover({ trigger: "hover" });
+</script>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>  
 }

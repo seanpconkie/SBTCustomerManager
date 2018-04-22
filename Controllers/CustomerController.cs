@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -58,7 +59,7 @@ namespace SBTCustomerManager.Controllers
             var viewModel = new CustomerViewModel() {StatusMessage = StatusMessage};
             var customerList = new List<Customer>();
 
-            var companyList = _context.CompanyDetails.Where(x => x.Id != userDetail.CompanyId);
+            var companyList = _context.CompanyDetails.Where(x => x.Id != userDetail.CompanyId).Where(x=>x.EndDate > DateTime.Now);
 
             foreach (var company in companyList)
             {
@@ -103,18 +104,217 @@ namespace SBTCustomerManager.Controllers
         [HttpGet]
         public IActionResult Customer(long id)
         {
-            return View(GetSelectedCustomer(id));
+            var viewModel = GetSelectedCustomer(id);
+
+            if (viewModel.Customer.Company.EndDate < DateTime.Now)
+            {
+                return NotFound();
+            }
+
+            var address = new StringBuilder();
+
+            if (viewModel.Customer.Company.UserId!="" && viewModel.Customer.Company.UserId != null)
+            {
+                address.AppendLine(viewModel.Customer.Contact.Name);
+            }
+            address.AppendLine(viewModel.Customer.Company.Name);
+            if (viewModel.Customer.Contact.UserContact.AddressLine1 != "" && viewModel.Customer.Contact.UserContact.AddressLine1 != null)
+            {
+                address.AppendLine(viewModel.Customer.Contact.UserContact.AddressLine1);
+            }
+            if (viewModel.Customer.Contact.UserContact.AddressLine2 != "" && viewModel.Customer.Contact.UserContact.AddressLine2 != null)
+            {
+                address.AppendLine(viewModel.Customer.Contact.UserContact.AddressLine2);
+            }
+            if (viewModel.Customer.Contact.UserContact.PostTown != "" && viewModel.Customer.Contact.UserContact.PostTown != null)
+            {
+                address.AppendLine(viewModel.Customer.Contact.UserContact.PostTown);
+            }
+            if (viewModel.Customer.Contact.UserContact.County != "" && viewModel.Customer.Contact.UserContact.County != null)
+            {
+                address.AppendLine(viewModel.Customer.Contact.UserContact.County);
+            }
+            if (viewModel.Customer.Contact.UserContact.Postcode != "" && viewModel.Customer.Contact.UserContact.Postcode != null)
+            {
+                address.AppendLine(viewModel.Customer.Contact.UserContact.Postcode);
+            }
+            if (viewModel.Customer.Contact.UserContact.Country != "" && viewModel.Customer.Contact.UserContact.Country != null)
+            {
+                address.AppendLine(viewModel.Customer.Contact.UserContact.Country);
+            }
+
+            viewModel.Address = address.ToString();
+
+            return View(viewModel);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Customer(SelectedCustomerViewModel model)
+        {
+            var customerInDb = _context.CompanyDetails.SingleOrDefault(y => y.Id == model.Customer.Company.Id);
+            if (customerInDb == null)
+            {
+                StatusMessage = string.Format("Couldn't load company with ID {0}.", model.Customer.Company.Id);
+            }
+            else
+            {
+                try
+                {
+                    customerInDb.Name = model.Customer.Company.Name;
+
+                    _context.Update(customerInDb);
+                    _context.SaveChanges();
+
+
+                    StatusMessage = string.Format("Company Name updated to {0}.", model.Customer.Company.Name);
+                }
+                catch (Exception ex)
+                {
+                    StatusMessage = string.Format("Couldn't update company with ID {0}, error: {1}", model.Customer.Company.Id, ex.Message);
+                }
+            }
+
+            var viewModel = GetSelectedCustomer(customerInDb.Id);
+            viewModel.StatusMessage = StatusMessage;
+
+            return View(viewModel);
+        }
+
+        public IActionResult NewCustomer(string companyName)
+        {
+            if (string.IsNullOrWhiteSpace(companyName))
+            {
+                StatusMessage = "New customer must have a Company Name.";
+                return RedirectToAction("Index");
+            }
+
+            var companyDetail = new CompanyDetail()
+            {
+                Name = companyName,
+                StartDate = DateTime.Now,
+                EndDate = new DateTime(2070,1,1)
+            };
+
+            try
+            {
+                _context.Add(companyDetail);
+                _context.SaveChanges();
+                StatusMessage = string.Format("Company '{0}' created, please add company contact.", companyName);
+                return RedirectToLocal("/Customer/Customer/" + companyDetail.Id);
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = string.Format("Company '{0}' could not be created, error: {1}.", companyName, ex.Message);
+            }
+
+
+            return RedirectToLocal("/Customer/Index");
+        }
+
+        public async Task<IActionResult> DeleteCustomer(long id, bool deleteStaff = false)
+        {
+            if (id == 0)
+            {
+                StatusMessage = string.Format("Company '{0}' cannot be delted.", id);
+            }
+
+            var companyInDb = _context.CompanyDetails.SingleOrDefault(x => x.Id == id);
+            companyInDb.EndDate = DateTime.Now;
+            companyInDb.UserId = null;
+
+            try
+            {
+                List<UserDetail> staffList = _context.UserDetails.Where(x => x.CompanyId == id).Where(x=>x.EndDate > DateTime.Now).ToList();
+
+                foreach (var member in staffList)
+                {
+                    var user = await _userManager.FindByIdAsync(member.UserId);
+
+                    if (user == null)
+                    {
+                        throw new ApplicationException(string.Format("Could not edit user '{0} - {1}', 'user' cannot be null.", member.Name,member.UserId));
+                    }
+
+                    var userDetails = _context.UserDetails.SingleOrDefault(x => x.UserId == member.UserId);
+
+                    if (deleteStaff)
+                    {
+                        var result = await _userManager.DeleteAsync(user);
+                        if (result.Succeeded)
+                        {
+                            userDetails.EndDate = DateTime.Now;
+                        }
+                        else
+                        {
+                            throw new ApplicationException(string.Format("Could not edit user '{0}'.", userDetails.Name));
+                        }
+                    }
+                    else
+                    {
+                        userDetails.CompanyId = 0;
+                    }
+
+                    var contactCompany = _context.CompanyDetails.SingleOrDefault(x => x.UserId == user.Id);
+
+                    if (contactCompany != null)
+                    {
+                        contactCompany.UserId = null;
+                        _context.Update(contactCompany);
+                    }
+
+                }
+
+                var subscriptions = _context.Subscriptions.Where(x => x.CompanyId == companyInDb.Id).Where(x => x.EndDate > DateTime.Now);
+                foreach (var sub in subscriptions)
+                {
+                    sub.EndDate = DateTime.Now;
+                    try
+                    {
+                        _context.Update(sub);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new ApplicationException(string.Format("Could not end subscription '{0}', error: {1}", sub.Id, ex.Message));
+                    }
+                }
+
+                _context.Update(companyInDb);
+                _context.SaveChanges();
+                StatusMessage = string.Format("Company '{0}' deleted.", companyInDb.Name);
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = string.Format("Company '{0}' could not be deleted, error: {1}.", companyInDb.Name, ex.Message);
+            }
+
+            return RedirectToLocal("/Customer/Index");
+
+        }
+
         [HttpGet]
         public IActionResult Staff(long id, bool includeDeleted = false)
         {
-            return View(GetSelectedCustomer(id, includeDeleted));
+            var viewModel = GetSelectedCustomer(id, includeDeleted);
+            if (viewModel.Customer.Company.EndDate < DateTime.Now)
+            {
+                return NotFound();
+            }
+
+            return View(viewModel);
         }
 
         [HttpGet]
         public IActionResult StaffDetail(long id)
         {
-            return View(GetStaffMember(id));
+            var viewModel = GetStaffMember(id);
+
+            if (viewModel.UserDetails.EndDate < DateTime.Now)
+            {
+                return NotFound();
+            }
+
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -122,21 +322,33 @@ namespace SBTCustomerManager.Controllers
         public IActionResult StaffDetail(StaffMemberViewModel model)
         {
             var userInDb = _context.UserDetails.SingleOrDefault(x => x.Id == model.UserDetails.Id);
-            var selectedCompany = _context.CompanyDetails.SingleOrDefault(x => x.Id == model.UserDetails.Company.Id);
+            var companyInDb = _context.CompanyDetails.SingleOrDefault(x => x.Id == model.UserDetails.Company.Id);
 
             userInDb.ForeName = model.UserDetails.ForeName;
             userInDb.Surname = model.UserDetails.Surname;
             userInDb.Name = model.UserDetails.ForeName + " " + model.UserDetails.Surname;
             userInDb.Title = model.UserDetails.Title;
-            userInDb.CompanyId = selectedCompany.Id;
             userInDb.ProfileId = model.UserDetails.Profile.Id;
+
+            if (userInDb.CompanyId != companyInDb.Id)
+            {
+                userInDb.CompanyId = companyInDb.Id;
+
+                var contactCompany = _context.CompanyDetails.SingleOrDefault(x => x.UserId == userInDb.UserId);
+
+                if (contactCompany != null)
+                {
+                    contactCompany.UserId = null;
+                 
+                    _context.Update(contactCompany);
+                }
+            }
 
             _context.Update(userInDb);
 
-            if (model.IsCompanyContact && selectedCompany.UserId != model.UserDetails.UserId)
+            if (model.IsCompanyContact && companyInDb.UserId != model.UserDetails.UserId)
             {
-                var companyInDb = _context.CompanyDetails.SingleOrDefault(x => x.Id == model.UserDetails.CompanyId);
-
+                // set user as company contact
                 companyInDb.UserId = model.UserDetails.UserId;
 
                 _context.Update(companyInDb);
@@ -150,7 +362,14 @@ namespace SBTCustomerManager.Controllers
         [HttpGet]
         public IActionResult StaffContact(long id)
         {
-            return View(GetStaffMember(id));
+            var viewModel = GetStaffMember(id);
+
+            if (viewModel.UserDetails.EndDate < DateTime.Now)
+            {
+                return NotFound();
+            }
+
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -199,6 +418,11 @@ namespace SBTCustomerManager.Controllers
         public IActionResult StaffProfile(long id)
         {
             var viewModel = GetStaffMember(id);
+
+            if (viewModel.UserDetails.EndDate < DateTime.Now)
+            {
+                return NotFound();
+            }
 
             viewModel.RoleList = SetRoleList(viewModel.UserDetails.UserId).Result;
 
@@ -288,7 +512,7 @@ namespace SBTCustomerManager.Controllers
                     // Add CanViewCompany role
                     await _userManager.AddToRoleAsync(user, "CanViewCompany");
 
-                    return RedirectToLocal("/Customer/Customer/" + model.Customer.Company.Id.ToString());
+                    return RedirectToLocal("/Customer/StaffDetail/" + newUser.Id);
 
                 }
                 AddErrors(result);
@@ -330,29 +554,38 @@ namespace SBTCustomerManager.Controllers
             {
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
+
             var userDetails = _context.UserDetails.SingleOrDefault(x => x.UserId == userId);
-
-
             var result = await _userManager.DeleteAsync(user);
+
             if (result.Succeeded)
             {
-
                 userDetails.EndDate = DateTime.Now;
 
                 _context.Update(userDetails);
+
+                var contactCompany = _context.CompanyDetails.SingleOrDefault(x => x.UserId == user.Id);
+
+                if (contactCompany != null)
+                {
+                    contactCompany.UserId = null;
+                    _context.Update(contactCompany);
+                }
+
                 _context.SaveChanges();
-
                 StatusMessage = string.Format("User '{0}' has been deleted.",userDetails.Name);
-
             }
             else
             {
                 StatusMessage = string.Format("Could not delete user '{0}'.", userDetails.Name);
             }
+
             AddErrors(result);
-            var viewModel = GetSelectedCustomer(userDetails.Id);
+
+            var viewModel = GetSelectedCustomer(userDetails.CompanyId,false);
+
             viewModel.StatusMessage = StatusMessage;
-            return View(viewModel);
+            return View("Staff",viewModel);
 
         }
 
@@ -377,15 +610,25 @@ namespace SBTCustomerManager.Controllers
         }
 
         [HttpGet]
-        public IActionResult Subscriptions(long id)
+        public IActionResult Subscriptions(long id, long subscriptionId = 0)
         {
             var viewModel = new Models.CustomerViewModels.SubscriptionViewModel();
+            if (subscriptionId > 0)
+            {
+                var subscription = _context.Subscriptions.SingleOrDefault(c => c.Id == subscriptionId);
+                viewModel.NewSubscription = subscription;
+            }
 
             var customer = new Customer()
             {
-                CompanySubscriptions = _context.Subscriptions.Include(c => c.SubscriptionType).Where(c => c.CompanyId == id).ToList(),
+                CompanySubscriptions = _context.Subscriptions.Include(c => c.SubscriptionType).Where(c => c.CompanyId == id).Where(x=>x.EndDate > DateTime.Now).ToList(),
                 Company = _context.CompanyDetails.SingleOrDefault(c => c.Id == id)
             };
+
+            if (customer.Company.EndDate < DateTime.Now)
+            {
+                return NotFound();
+            }
 
             viewModel.Customer = customer;
             viewModel.Types = SubscriptionType.GetTypes(_context.SubscriptionTypes.Where(x => x.Id > 0).ToList());
@@ -412,17 +655,38 @@ namespace SBTCustomerManager.Controllers
             };
 
             var viewModel = new Models.CustomerViewModels.SubscriptionViewModel();
+            viewModel.Types = SubscriptionType.GetTypes(_context.SubscriptionTypes.Where(x => x.Id > 0).ToList());
 
-            try
+            if (model.NewSubscription.Id == 0)
             {
-                _context.Add(subscription);
-                _context.SaveChanges();
-                StatusMessage = "New subscription added.";
+                try
+                {
+                    _context.Add(subscription);
+                    _context.SaveChanges();
+                    StatusMessage = "New subscription added.";
+                }
+                catch (Exception ex)
+                {
+                    StatusMessage = string.Format("An error occured when adding subscription: {0}", ex.Message);
+                    viewModel.NewSubscription = subscription;
+                }  
             }
-            catch (Exception ex)
+            else if (model.NewSubscription.Id > 0)
             {
-                StatusMessage = string.Format("An error occured when adding subscription: {0}", ex.Message);
-                viewModel.NewSubscription = subscription;
+                subscription.Id = model.NewSubscription.Id;
+
+                try
+                {
+                    _context.Update(subscription);
+                    _context.SaveChanges();
+                    return RedirectToLocal("/Customer/Subscriptions/" + model.Customer.Company.Id);
+                }
+                catch (Exception ex)
+                {
+                    StatusMessage = string.Format("An error occured when adding subscription: {0}", ex.Message);
+                    viewModel.NewSubscription = subscription;
+
+                }
             }
 
             var customer = new Customer()
@@ -435,9 +699,41 @@ namespace SBTCustomerManager.Controllers
             viewModel.StatusMessage = StatusMessage;
 
             return View(viewModel);
-        
+
         }
 
+        public IActionResult DeleteSubscription(long id)
+        {
+            var subscription = new Subscription();
+            long companyId = 0;
+
+            if (id > 0)
+            {
+                subscription = _context.Subscriptions.SingleOrDefault(c => c.Id == id);
+                companyId = subscription.CompanyId;
+            }
+
+            if (subscription == null)
+            {
+                StatusMessage = string.Format("Could not load ID {0} for deletion.", id);
+            }
+            else
+            {
+                try
+                {
+                    subscription.EndDate = DateTime.Now;
+                    _context.Update(subscription);
+                    _context.SaveChanges();
+                    return RedirectToLocal("/Customer/Subscriptions/" + companyId);
+                }
+                catch (Exception ex)
+                {
+                    StatusMessage = string.Format("An error occured while deleting ID {0}. Error: {1}",id, ex.Message);
+                }
+            }
+
+            return View(new Models.CustomerViewModels.SubscriptionViewModel(){StatusMessage = StatusMessage});
+        }
         #region Helpers
 
         private void AddErrors(IdentityResult result)

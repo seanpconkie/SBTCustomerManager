@@ -8,7 +8,7 @@
 <div class="w3-container">
     <div class="w3-bar w3-padding">
         <div asp-validation-summary="All" class="text-danger w3-bar-item"></div>
-        <a asp-controller="Customer" asp-action="AddCompany" class="w3-bar-item w3-button accordian1 w3-right" data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Add Company"><i class="fas fa-building fa-fw"></i></a>
+        <a href="javascript:void(0);" onclick="document.getElementById('idSub').style.display='block'" class="w3-bar-item w3-button accordian1 w3-right" data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Add Company"><i class="fas fa-building fa-fw"></i></a>
     </div>
     <table id="users" class="display">
         <thead>
@@ -16,7 +16,6 @@
                 <th>Company Name</th>
                 <th>Start Date</th>
                 <th>Contact</th>
-                <th></th>
                 <th></th>
             </tr>
         </thead>
@@ -27,27 +26,81 @@
                     <td class="w3-center"><a href="/Customer/Customer/@customer.Company.Id" data-message-id="@customer.Company.Id">@customer.Company.Name</a></td>
                     <td class="w3-center">@customer.Company.StartDate.Value.ToString("dd MMM yyyy")</td>
                     <td class="w3-center">@customer.Contact.Name</td>
-                    <td class="w3-center" style="width: 50px"><a class="js-edit" href="javascript:void(0);" data-message-id="@customer.Company.Id"><i class="far fa-edit"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Edit Customer"></i></a></td>
-                    <td class="w3-center" style="width: 50px"><a class="js-delete" href="javascript:void(0);" data-message-id="@customer.Company.Id"><i class="far fa-trash-alt"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Delete Customer"></i></a></td>
+                    @if (customer.Company.Id == 0)
+                    {
+                        <td></td>
+                    }
+                    else
+                    {
+                        <td class="w3-center" style="width: 50px"><a class="delete" href="javascript:void(0);" data-customer-id="@customer.Company.Id"><i class="far fa-trash-alt"  data-toggle="popover" data-trigger="focus"  data-placement="top" data-content="Delete Customer"></i></a></td>
+                    }
                 </tr>
             }
         </tbody>
     </table>    
 </div><br>
 
+
+<!-- Modal that pops up when you click to add a company -->
+<div id="idSub" class="w3-modal" style="z-index:4">
+    <div class="w3-modal-content w3-animate-zoom">
+        <form method="POST">
+            <div class="w3-container w3-padding-large">
+                <div class="w3-row">
+                    <span onclick="document.getElementById('idSub').style.display='none'" class="w3-button w3-right" title="Close Modal"><i class="w3-xlarge fas fa-times"></i></span>
+                </div>
+                <h2 class="w3-center w3-opacity">New Customer</h2>
+                @Html.Partial("_StatusMessage", Model.StatusMessage)
+                <hr>
+                <div class="w3-content w3-padding-large">
+                    <div class="form-group">
+                        <label>Company Name</label>
+                        <input id="companyName" type="text" placeholder="New Company Ltd" class="w3-input"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="" style="background-color:#f1f1f1">
+                <div class="w3-bar w3-padding-large">
+                    <button type="button" class="w3-button w3-text-white" style="background-color: #f44336;" onclick="document.getElementById('idSub').style.display='none'">Cancel</button>
+                    <button type="button" class="w3-button accordian1 w3-right w3-text-white" onclick="createCompany()">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>    
+</div>
+@Html.Partial("_Loading")
+
 @section scripts
 {
-    <script>
-        $(document).ready(function () {
-            $("#users").DataTable();
-    
-        });
-    </script>
-    <script>
-        $("[data-toggle='popover']").popover({ trigger: "hover" });
-    </script>
+<script>
+    $(document).ready(function () {
+        $("#users").DataTable();
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>  
+        $("#users").on("click", ".delete", function() {
+                var button = $(this);
+
+                if(confirm("Would you like to delete this customer?")) {
+                    var deleteStaff = confirm("Would you like to delete all staff?");
+                    document.getElementById('id01').style.display='block'
+                    window.location.href="/Customer/DeleteCustomer/?id=" + button.attr('data-customer-id') + "&deleteStaff=" + deleteStaff;
+                }
+        
+            })
+
+    });
+</script>
+<script>
+    $("[data-toggle='popover']").popover({ trigger: "hover" });
+</script>
+<script>
+    function createCompany() {
+        document.getElementById('id01').style.display='block'
+        var name = document.getElementById('companyName');
+        window.location.href="/Customer/NewCustomer/?companyName=" + name.value;
+    }
+</script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>  
 }

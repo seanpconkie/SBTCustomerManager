@@ -44,7 +44,6 @@ namespace SBTCustomerManager.Controllers.api
         [HttpPut("{id}")]
         public IActionResult Get(int id)
         {
-
             var message = _context.UserMessages.SingleOrDefault(c => c.Id == id);
 
             if (message == null)

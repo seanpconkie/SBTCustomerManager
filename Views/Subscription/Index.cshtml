@@ -34,12 +34,12 @@
 
 <!-- Modal that pops up when you click on "New Message" -->
 <div id="id02" class="w3-modal" style="z-index:4">
-    <div class="w3-modal-content w3-animate-zoom" style="width:400px">
-        <div class="w3-container w3-padding">
-            <span onclick="document.getElementById('id02').style.display='none'"
-            class="w3-button w3-right"><i class="fas fa-times"></i></span>
-            <div class="w3-container">
-                <form method="post">
+    <div class="w3-modal-content w3-animate-zoom">
+        <form method="post">
+            <div class="w3-container w3-padding">
+                <span onclick="document.getElementById('id02').style.display='none'"
+                class="w3-button w3-right"><i class="fas fa-times"></i></span>
+                <div class="w3-container">
                     <div id="form-contents">
                     </div>
                     <div class="form-group w3-padding-large">
@@ -47,11 +47,16 @@
                         <input id="id-input" asp-for="SubscriptionType.Id" class=" w3-input" type="hidden"/>
                         <input id="type-input" asp-for="SubscriptionType.Type" class=" w3-input" placeholder="New Type"/>
                     </div>
-                    <button type="submit" class="w3-button accordian1 w3-block w3-round">Submit</button>
-                    <br>
-                </form>
+                </div>
             </div>
-        </div>
+
+            <div class="" style="background-color:#f1f1f1">
+                <div class="w3-bar w3-padding-large">
+                    <button type="button" class="w3-button w3-text-white" style="background-color: #f44336;" onclick="document.getElementById('id02').style.display='none'">Cancel</button>
+                    <button type="submit" class="w3-button accordian1 w3-right w3-text-white" onclick="document.getElementById('id01').style.display='block'">Save</button>
+                </div>
+            </div>
+       </form>
     </div>    
 </div>
 
